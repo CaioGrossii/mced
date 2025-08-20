@@ -1,0 +1,148 @@
+/* ---- Configurações Globais e Variáveis ---- */
+:root {
+    --primary-bg: #1e1e2f;
+    --container-bg: #27293d;
+    --input-bg: #3c3e52;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a3c4;
+    --accent-color: #ffffff;
+    --error-color: #ff5555;
+    --success-color: #50fa7b;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--primary-bg);
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: radial-gradient(circle, var(--container-bg) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* ---- Container Principal ---- */
+.main-container {
+    width: 100%;
+    max-width: 900px;
+    padding: 2rem;
+}
+
+.login-container {
+    background-color: var(--container-bg);
+    padding: 3rem 4rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 2.5rem;
+}
+
+/* ---- Formulário e Inputs ---- */
+#login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-group {
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-bg);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--text-secondary);
+}
+
+/* ---- Botão e Links ---- */
+.login-button {
+    background-color: var(--accent-color);
+    color: var(--primary-bg);
+    border: none;
+    padding: 0.9rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.forgot-password {
+    display: block;
+    margin-top: 1.5rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* ---- Mensagens de Feedback ---- */
+.message {
+    margin-top: 1rem;
+    font-weight: 500;
+    height: 20px;
+}
+
+.message.success {
+    color: var(--success-color);
+}
+
+.message.error {
+    color: var(--error-color);
+}
+
+
+/* ---- Responsividade para Telas Menores ---- */
+@media (max-width: 600px) {
+    .login-container {
+        padding: 2rem 1.5rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+}
