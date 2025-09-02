@@ -1,42 +1,112 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('login-form');
-    const messageElement = document.getElementById('message');
+// Aguarda o documento HTML ser completamente carregado
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Seleciona os campos do formulário
+    const form = document.getElementById('cadastroForm');
+    const cpfInput = document.getElementById('cpf');
+    const telefoneInput = document.getElementById('telefone');
+    const feedbackDiv = document.getElementById('feedback');
 
-    loginForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-
-        messageElement.textContent = '';
-        messageElement.className = 'message';
-
-        try {
-            // ---- ÚNICA ALTERAÇÃO AQUI ----
-            // Apontamos para o nosso novo arquivo de API em PHP
-            const response = await fetch('api/login.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
-
-            const data = await response.json();
-            
-            // O resto do código continua igual, pois ele espera uma resposta JSON.
-            if (data.success) {
-                messageElement.textContent = 'Login bem-sucedido! Redirecionando...';
-                messageElement.classList.add('success');
-            } else {
-                messageElement.textContent = data.message || 'E-mail ou senha inválidos.';
-                messageElement.classList.add('error');
-            }
-
-        } catch (error) {
-            console.error('Erro na requisição:', error);
-            messageElement.textContent = 'Ocorreu um erro. Tente novamente.';
-            messageElement.classList.add('error');
-        }
+    // MÁSCARAS DE INPUT
+    // Máscara para CPF (000.000.000-00)
+    cpfInput.addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não for dígito
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+        e.target.value = value;
     });
+
+    // Máscara para Telefone ((00) 90000-0000)
+    telefoneInput.addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, '');
+        value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
+        value = value.replace(/(\d{5})(\d)/, '$1-$2');
+        e.target.value = value;
+    });
+
+
+    // VALIDAÇÃO NO ENVIO DO FORMULÁRIO
+    form.addEventListener('submit', function(event) {
+        // Impede o envio padrão do formulário para validarmos primeiro
+        event.preventDefault(); 
+        
+        const email = document.getElementById('email').value;
+        const senha = document.getElementById('senha').value;
+        const cpf = cpfInput.value;
+        const telefone = telefoneInput.value;
+        
+        // Limpa mensagens de feedback anteriores
+        feedbackDiv.innerHTML = '';
+        feedbackDiv.className = '';
+
+        // Validações
+        if (senha.length < 8) {
+            exibirFeedback('A senha deve ter pelo menos 8 caracteres.', 'erro');
+            return; // Para a execução
+        }
+        
+        if (!validarCPF(cpf)) {
+            exibirFeedback('CPF inválido. Por favor, verifique.', 'erro');
+            return;
+        }
+
+        // Se tudo estiver correto, envia o formulário
+        exibirFeedback('Cadastro enviado com sucesso!', 'sucesso');
+        // A linha abaixo enviaria o formulário de verdade.
+        form.submit();
+        
+        // Para este exemplo, apenas exibimos a mensagem de sucesso.
+        // Remova o comentário da linha 'form.submit()' quando o PHP estiver pronto.
+        setTimeout(() => {
+            form.submit();
+        }, 1500); // Envia após 1.5 segundos para o usuário ver a mensagem
+
+    });
+
+    // Função para exibir mensagens ao usuário
+    function exibirFeedback(mensagem, tipo) {
+        feedbackDiv.textContent = mensagem;
+        feedbackDiv.className = tipo;
+    }
+
+    // Função completa para validar CPF (algoritmo oficial)
+    function validarCPF(cpf) {
+        cpf = cpf.replace(/[^\d]+/g,''); // Remove caracteres não numéricos
+        if(cpf == '') return false;	
+        if (cpf.length != 11 || 
+            cpf == "00000000000" || 
+            cpf == "11111111111" || 
+            cpf == "22222222222" || 
+            cpf == "33333333333" || 
+            cpf == "44444444444" || 
+            cpf == "55555555555" || 
+            cpf == "66666666666" || 
+            cpf == "77777777777" || 
+            cpf == "88888888888" || 
+            cpf == "99999999999")
+                return false;		
+
+        // Valida 1o digito	
+        let add = 0;	
+        for (let i=0; i < 9; i ++)		
+            add += parseInt(cpf.charAt(i)) * (10 - i);	
+            let rev = 11 - (add % 11);	
+            if (rev == 10 || rev == 11)		
+                rev = 0;	
+            if (rev != parseInt(cpf.charAt(9)))		
+                return false;		
+        
+        // Valida 2o digito	
+        add = 0;	
+        for (let i = 0; i < 10; i ++)		
+            add += parseInt(cpf.charAt(i)) * (11 - i);	
+        rev = 11 - (add % 11);	
+        if (rev == 10 || rev == 11)	
+            rev = 0;	
+        if (rev != parseInt(cpf.charAt(10)))
+            return false;		
+            
+        return true;   
+    }
 });
