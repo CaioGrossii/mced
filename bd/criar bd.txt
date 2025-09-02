@@ -1,0 +1,47 @@
+CREATE DATABASE IF NOT EXISTS mced;
+USE mced;
+
+-- Tabela Clientes
+CREATE TABLE clientes (
+    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    cpf_cliente VARCHAR(14) NOT NULL,
+    nm_cliente VARCHAR(100) NOT NULL,
+    tel_cliente VARCHAR(20),
+    email_cliente VARCHAR(100),
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    senha VARCHAR(255) NOT NULL
+);
+
+-- Tabela Categoria
+CREATE TABLE categorias (
+     id_categoria INT AUTO_INCREMENT PRIMARY KEY,
+     ds_categoria VARCHAR(100) NOT NULL
+ );
+
+-- Tabela Comodo
+CREATE TABLE comodos (
+    id_comodo INT AUTO_INCREMENT PRIMARY KEY,
+    ds_comodo VARCHAR(100) NOT NULL,
+    id_cliente INT NOT NULL,
+    FOREIGN KEY (id_cliente) REFERENCES clientes (id_cliente)
+);
+
+-- Tabela Eletrodomesticos
+CREATE TABLE eletrodomesticos (
+    id_eletro INT AUTO_INCREMENT PRIMARY KEY,
+    nm_eletro VARCHAR(100) NOT NULL,
+    watts INT NOT NULL,
+    id_categoria INT NOT NULL,
+    id_comodo INT NOT NULL,
+    FOREIGN KEY (id_comodo) REFERENCES comodos(id_comodo)
+);
+
+-- Tabela Consumo
+CREATE TABLE consumo (
+    id_consumo NUMERIC PRIMARY KEY,
+    data_reg VARCHAR(10) NOT NULL,
+    hora_inicio VARCHAR(8) NOT NULL,
+    hora_fim VARCHAR(8) NOT NULL, 
+    id_eletro INT NOT NULL,
+    FOREIGN KEY (id_eletro) REFERENCES eletrodomesticos(id_eletro)
+);

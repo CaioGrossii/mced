@@ -43,26 +43,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $conexao = new PDO("mysql:host=$servidor;dbname=$banco;charset=utf8", $usuario_db, $senha_db);
             $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            // Prepara a query SQL para evitar SQL Injection
             $sql = "INSERT INTO clientes (email, senha_hash, cpf, telefone) VALUES (:email_cliente, :senha, :cpf_cliente, :tel_cliente)";
             $stmt = $conexao->prepare($sql);
 
-            // Associa os valores às variáveis da query
             $stmt->bindParam(':email_cliente', $email);
             $stmt->bindParam(':senha', $senha_hash); 
             $stmt->bindParam(':cpf_cliente', $cpf_limpo);
             $stmt->bindParam(':tel_cliente', $telefone);
 
-            // Executa a query
             $stmt->execute();
 
-            echo "<h1>Cadastro realizado com sucesso!</h1>";
-            echo "<p>Você será redirecionado em breve.</p>";
-            // header("Location: pagina_de_sucesso.html"); // Redireciona para outra página
+            // AÇÃO CORRETA: Redireciona PRIMEIRO
+            header("Location: pagina_de_sucesso.html");
+            exit(); // Encerra o script para garantir que o redirecionamento ocorra
 
         } catch(PDOException $e) {
             // Em um ambiente de produção, não exiba o erro detalhado para o usuário
-            echo "Erro ao cadastrar: " . $e->getMessage();
+            // Idealmente, você faria um log do erro aqui.
+            die("Erro ao cadastrar. Por favor, tente novamente mais tarde.");
+            // echo "Erro ao cadastrar: " . $e->getMessage(); // Apenas para depuração
         }
         
         $conexao = null; // Fecha a conexão
