@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* Variáveis de Cores da Landing Page para consistência */
+:root {
+    --primary-blue: #007bff;   /* Azul vibrante */
+    --secondary-blue: #0056b3; /* Azul mais escuro para hover */
+    --dark-bg: #1a1a1a;        /* Fundo principal escuro */
+    --light-text: #e0e0e0;     /* Texto claro */
+    --gray-text: #a0a0a0;      /* Texto cinza para labels e placeholders */
+    --card-bg: #2a2a2a;        /* Fundo do container/cards */
+    --border-color: #3a3a3a;   /* Cor da borda */
+    --success-color: #28a745;  /* Verde para mensagens de sucesso */
+    --error-color: #dc3545;    /* Vermelho para mensagens de erro */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif; /* Fonte padrão da LP */
+    background: var(--dark-bg); /* Fundo escuro */
+    color: var(--light-text); /* Cor de texto padrão */
+    display: flex;
+    min-height: 100vh;
+    justify-content: center; 
+    align-items: center;    
+}
+
+.login-container {
+    background: var(--card-bg); /* Fundo do container */
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color); /* Borda sutil */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra para tema dark */
+}
+
+.login-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.2em; /* Ajuste de tamanho */
+    font-weight: 700;
+    color: var(--primary-blue); /* Cor de destaque azul */
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    color: var(--gray-text); /* Texto cinza para labels */
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--dark-bg); /* Fundo do input escuro */
+    color: var(--light-text); /* Texto do input claro */
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input::placeholder {
+    color: var(--gray-text);
+}
+
+input:focus {
+    border-color: var(--primary-blue); /* Borda azul ao focar */
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3); /* Brilho sutil */
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-blue); /* Fundo do botão azul */
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background: var(--secondary-blue); /* Azul mais escuro no hover */
+}
+
+.extra-links {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.extra-links a {
+    text-decoration: none;
+    color: var(--primary-blue); /* Cor dos links */
+    font-size: 14px;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+
+.extra-links a:hover {
+    color: var(--light-text);
+}
+
+.erro {
+    color: var(--error-color); 
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.sucesso {
+    color: var(--success-color);
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 15px;
+}

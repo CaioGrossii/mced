@@ -20,8 +20,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $email = trim(htmlspecialchars($_POST['email']));
         $senha_digitada = $_POST['senha'];
 
-        // Prepara a consulta para buscar o usuário pelo e-mail
-        $sql = "SELECT email_cliente, senha FROM clientes WHERE email_cliente = :email";
+        // ALTERAÇÃO 1: Adicionar "nm_cliente" na consulta para buscar o nome do usuário.
+        $sql = "SELECT nm_cliente, email_cliente, senha FROM clientes WHERE email_cliente = :email";
         $stmt = $conexao->prepare($sql);
         $stmt->bindParam(':email', $email);
         $stmt->execute();
@@ -34,6 +34,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Armazena os dados na sessão
             $_SESSION['usuario_logado'] = true;
             $_SESSION['email_usuario'] = $usuario['email_cliente'];
+            
+            // ALTERAÇÃO 2: Armazenar o nome do usuário na sessão.
+            $_SESSION['nome_usuario'] = $usuario['nm_cliente'];
             
             // Redireciona para a dashboard
             header("Location: /mced/dash.php");
