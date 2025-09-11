@@ -74,6 +74,7 @@ try {
                     <li><a href="#"><i class="fa-solid fa-bolt-lightning"></i> Consumo</a></li>
                     <li><a href="view_imoveis.php"><i class="fas fa-building"></i> Imóveis</a></li>
                     <li><a href="comodos.php" class="active"><i class="fas fa-door-open"></i> Cômodos</a></li>
+                    <li><a href="categorias.php" class="active"><i class="fas fa-tags"></i> Categorias</a></li>
                     <li><a href="eletro.php"><i class="fas fa-plug"></i> Eletrodomésticos</a></li>
                     <li><a href="#"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
                 </ul>

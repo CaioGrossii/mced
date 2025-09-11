@@ -1,3 +1,7 @@
+html{
+    scroll-behavior: smooth;
+}
+
 /* Variáveis de Cores */
 :root {
     --primary-blue: #007bff; /* Azul vibrante */
