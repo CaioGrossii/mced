@@ -42,14 +42,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Se a verificação passar, insere o eletrodoméstico
-        $sql_insert = "INSERT INTO eletrodomesticos (nm_eletro, watts, id_comodo) VALUES (:nm_eletro, :watts, :id_comodo)";
+        $sql_insert = "INSERT INTO eletrodomesticos (nm_eletro, watts, id_comodo, id_categoria) VALUES (:nm_eletro, :watts, :id_comodo, 1)";
         $stmt_insert = $conexao->prepare($sql_insert);
         $stmt_insert->bindParam(':nm_eletro', $nm_eletro);
         $stmt_insert->bindParam(':watts', $watts);
         $stmt_insert->bindParam(':id_comodo', $id_comodo);
         $stmt_insert->execute();
         
-        header("Location: eletrodomesticos.php");
+        header("Location: eletro.php");
         exit();
 
     } catch (PDOException $e) {
