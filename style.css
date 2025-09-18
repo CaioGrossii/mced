@@ -59,8 +59,8 @@ body {
 }
 
 .navbar .logo img {
-    margin-right: 10px;
-    border-radius: 50%;
+    width: 15%;
+    height: 15%;
 }
 
 .navbar nav ul {
@@ -384,5 +384,41 @@ section {
     }
     .cta-section h2 {
         font-size: 2em;
+    }
+}
+
+/* Botão hamburguer */
+.menu-toggle {
+    display: none;
+    font-size: 1.8em;
+    background: none;
+    border: none;
+    color: var(--light-text);
+    cursor: pointer;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .navbar nav {
+        display: none;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .navbar nav.active {
+        display: block;
+    }
+
+    .navbar nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .navbar nav ul li {
+        margin: 10px 0;
     }
 }

@@ -7,23 +7,37 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
+
+<script>
+  const menuToggle = document.getElementById('menu-toggle');
+  const nav = document.querySelector('.navbar nav');
+
+  menuToggle.addEventListener('click', () => {
+    nav.classList.toggle('active');
+  });
+</script>
+
 <body>
     <header class="navbar">
         <div class="container">
             <div class="logo">
-                <img src="https://via.placeholder.com/40x40/007bff/ffffff?text=M" alt="Logo MCED">
-                <span>MCED</span>
+                <img src="img/logo_mced.png" alt="Logo MCED">
+        
             </div>
+
+            <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
+  ☰
+</button>
+
             <nav>
                 <ul>
-                    <li><a href="#home">Home</a></li>
+                    <li><a href="#hero">Home</a></li>
                     <li><a href="#services">Serviços</a></li>
                     <li><a href="#about">Sobre</a></li>
                     <li><a href="#contact">Contato</a></li>
                 </ul>
             </nav>
             <a href="cadastro.html" class="btn-talk">Cadastrar-se</a>
-            <a href="#contact" class="btn-talk">Fale Conosco</a>
         </div>
     </header>
 
@@ -37,73 +51,78 @@
 
     <section id="services" class="services-section">
         <div class="container">
-            <h2 class="section-title">Nossa Especialização</h2>
-            <p class="section-subtitle">Serviços que Fornecemos</p>
+            <h2 class="section-title">Nossos Serviços</h2>
+     
 
             <div class="services-grid">
                 <div class="service-card">
-                    <img src="https://via.placeholder.com/60x60/007bff/ffffff?text=R" alt="Relatórios Personalizados">
-                    <h3>Relatórios Personalizados</h3>
-                    <p>Gere relatórios detalhados de consumo por período, imóvel e cômodo.</p>
-                    <a href="#" class="learn-more">Saiba mais →</a>
+                    
+                    <h3>Monitoramento</h3>
+                    <p>Acompanhe o consumo de cada aparelho.</p>
+                    
                 </div>
                 <div class="service-card">
-                    <img src="https://via.placeholder.com/60x60/007bff/ffffff?text=A" alt="Alertas de Uso Excessivo">
+                    
                     <h3>Alertas Inteligentes</h3>
                     <p>Receba notificações sobre uso excessivo e gastos inesperados.</p>
-                    <a href="#" class="learn-more">Saiba mais →</a>
+                    
                 </div>
                 <div class="service-card">
-                    <img src="https://via.placeholder.com/60x60/007bff/ffffff?text=E" alt="Eficiência Energética">
+                    
                     <h3>Eficiência Energética</h3>
                     <p>Sugestões personalizadas para otimizar o consumo e reduzir custos.</p>
-                    <a href="#" class="learn-more">Saiba mais →</a>
+                    
                 </div>
                 <div class="service-card">
-                    <img src="https://via.placeholder.com/60x60/007bff/ffffff?text=M" alt="Monitoramento em Tempo Real">
-                    <h3>Monitoramento em Tempo Real</h3>
-                    <p>Acompanhe o consumo de cada aparelho e cômodo em tempo real.</p>
-                    <a href="#" class="learn-more">Saiba mais →</a>
+                   
+                    <h3>Relatórios Personalizados</h3>
+                    <p>Gere relatórios detalhados de consumo por período, imóvel e cômodo.</p>
+                    
                 </div>
                 <div class="service-card">
-                    <img src="https://via.placeholder.com/60x60/007bff/ffffff?text=C" alt="Controle Completo">
+                   
                     <h3>Controle Completo</h3>
                     <p>Gerencie seus imóveis, cômodos e eletrodomésticos de forma intuitiva.</p>
-                    <a href="#" class="learn-more">Saiba mais →</a>
+                    
                 </div>
                 <div class="service-card">
-                    <img src="https://via.placeholder.com/60x60/007bff/ffffff?text=S" alt="Sustentabilidade">
+                   
                     <h3>Sustentabilidade</h3>
                     <p>Contribua para o uso consciente da energia e um futuro mais verde.</p>
-                    <a href="#" class="learn-more">Saiba mais →</a>
+                    
                 </div>
             </div>
+
+            
         </div>
     </section>
 
+
     <section id="about" class="about-section">
         <div class="container">
-            <h2 class="section-title">Sobre o Projeto MCED</h2>
+            <h2 class="section-title">Sobre o Projeto - MCED</h2>
             <div class="about-content">
-                <p>O sistema MCED foi projetado para gerenciar o consumo de energia dos eletrodomésticos de uma residência, organizados por cômodos. Ele coleta dados sempre que um aparelho é utilizado, registrando a data e a duração do uso. Dessa forma, o usuário pode acompanhar o tempo de uso e os gastos de energia dos aparelhos de sua(s) residência(s).</p>
+                <p>O sistema tem como objetivo oferecer uma plataforma web para gerenciamento inteligente do consumo de energia elétrica em ambientes residenciais. O sistema permitirá ao usuário cadastrar seus imóveis, organizar os cômodos de cada residência e associar eletrodomésticos a esses espaços, de modo a estruturar de forma hierárquica e clara as informações de consumo.</p>
+                <div><img src="#" alt="erro"></div>
                 <p>Queremos que dentro do sistema, seja possível gerar relatórios personalizados, permitindo comparações entre períodos de consumo, enviar alertas de uso excessivo e sugerir práticas para melhorar a eficiência energética e reduzir custos. Assim, o usuário tem total controle sobre o consumo de energia, com informações acessíveis, claras e em tempo real, contribuindo para a sustentabilidade e a economia doméstica.</p>
+                <div><img src="#" alt="erro"></div>
                 <p>O objetivo do projeto é construir um sistema web funcional com funcionalidades de cadastro, login, gerenciamento de imóveis e eletrodomésticos, visualização de consumo, geração de relatórios e aplicação de filtros. A interface será amigável, responsiva e com foco na usabilidade, contribuindo diretamente para o cumprimento do Objetivo de Desenvolvimento Sustentável.</p>
-                <p>O sistema permitirá que o usuário se cadastre utilizando dados pessoais (nome, CPF, e-mail, telefone) e, a partir disso, registre seus imóveis, cômodos e eletrodomésticos. Todas essas informações serão organizadas e associadas ao seu perfil. Após o login, o usuário poderá visualizar e gerenciar o consumo energético de forma detalhada, com dados por imóvel, cômodo e aparelho. A plataforma disponibilizará relatórios personalizados com filtros por período, possibilitando análises comparativas, identificação de excessos e tomada de decisões para melhorar a eficiência energética. Como resultado, espera-se promover o uso consciente de energia, reduzir custos e contribuir para a sustentabilidade.</p>
             </div>
         </div>
     </section>
 
     <section class="cta-section">
         <div class="container">
-            <h2>Vamos Criar um Projeto Incrível Juntos!</h2>
+            <h2>Vamos Transformar o Mundo Juntos!</h2>
             <a href="#contact" class="btn-contact-cta">Entre em Contato</a>
+            <a href="#" class="btn-contact-cta"></a>
         </div>
     </section>
 
     <section id="contact" class="contact-section">
         <div class="container">
             <h2 class="section-title">Fale Conosco</h2>
-            <p class="section-subtitle">Vamos Conversar Sobre Seus Próximos Projetos</p>
+            <p class="section-subtitle">Relacionamento - Perguntas - Sugestões</p>
             <form class="contact-form">
                 <div class="form-group">
                     <input type="text" name="name" placeholder="Seu Nome *" required>
