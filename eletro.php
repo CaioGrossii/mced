@@ -34,9 +34,10 @@ try {
     $stmt_comodos_form->execute();
     $comodos_disponiveis = $stmt_comodos_form->fetchAll(PDO::FETCH_ASSOC);
 
-    // 2. Busca todas as categorias disponíveis para popular o formulário.
-    $sql_categorias = "SELECT id_categoria, ds_categoria FROM categorias ORDER BY ds_categoria ASC";
+    // 2. Busca as categorias DO CLIENTE para popular o formulário.
+    $sql_categorias = "SELECT id_categoria, ds_categoria FROM categorias WHERE id_cliente = :id_cliente ORDER BY ds_categoria ASC";
     $stmt_categorias = $conexao->prepare($sql_categorias);
+    $stmt_categorias->bindParam(':id_cliente', $_SESSION['id_cliente']);
     $stmt_categorias->execute();
     $categorias_disponiveis = $stmt_categorias->fetchAll(PDO::FETCH_ASSOC);
 
@@ -91,7 +92,7 @@ try {
                     <li><a href="view_imoveis.php"><i class="fas fa-building"></i> Imóveis</a></li>
                     <li><a href="comodos.php"><i class="fas fa-door-open"></i> Cômodos</a></li>
                     <li><a href="categorias.php"><i class="fas fa-tags"></i> Categorias</a></li>
-                    <li><a href="eletrodomesticos.php" class="active"><i class="fas fa-plug"></i> Eletrodomésticos</a></li>
+                    <li><a href="eletro.php" class="active"><i class="fas fa-plug"></i> Eletrodomésticos</a></li>
                     <li><a href="#"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
                 </ul>
             </nav>

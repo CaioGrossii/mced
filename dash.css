@@ -148,4 +148,15 @@ table th {
     font-weight: 600;
 }
 
-
+.btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #2563eb;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    white-space: nowrap; /* Impede que o texto do botão quebre linha */
+}
