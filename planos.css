@@ -1,0 +1,86 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background: #f4f6f8;
+  color: #333;
+}
+
+.header {
+  text-align: center;
+  padding: 40px 20px;
+  background: #1e3a8a;
+  color: #fff;
+}
+
+.planos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 40px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.plano {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.plano:hover {
+  transform: translateY(-5px);
+}
+
+.plano img {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.plano h2 {
+  color: #1e3a8a;
+}
+
+.preco {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 10px 0 20px;
+}
+
+.plano ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  text-align: left;
+}
+
+.plano ul li {
+  margin: 8px 0;
+}
+
+.plano ul li i {
+  margin-right: 8px;
+  color: #1e3a8a;
+}
+
+.plano button {
+  background: #1e3a8a;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.plano button:hover {
+  background: #2563eb;
+}
+
+.destaque {
+  border: 2px solid #2563eb;
+  transform: scale(1.05);
+}
