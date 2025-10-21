@@ -6,28 +6,17 @@
     <title>MCED - Monitoramento e Controle de Energia Doméstica</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
 </head>
-
-<script>
-  const menuToggle = document.getElementById('menu-toggle');
-  const nav = document.querySelector('.navbar nav');
-
-  menuToggle.addEventListener('click', () => {
-    nav.classList.toggle('active');
-  });
-</script>
 
 <body>
     <header class="navbar">
         <div class="container">
             <div class="logo">
-                <img src="img/logo_mced.png" alt="Logo MCED">
+                     <p> MCED </p>
+                 <!-- <img src="img/logo_mced.png" alt="Logo MCED">  -->
         
             </div>
-
-            <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
-  ☰
-</button>
 
             <nav>
                 <ul>
@@ -41,13 +30,38 @@
         </div>
     </header>
 
-    <section id="hero" class="hero-section">
-        <div class="container">
-            <h1 class="hero-title">MCED: Monitoramento do Consumo de Energia Doméstica</h1>
-            <p class="hero-subtitle">Monitore, controle e economize energia em sua casa de forma inteligente.</p>
-            <a href="#services" class="btn-primary">Descubra Nossos Serviços</a>
-        </div>
-    </section>
+
+<section class="carousel-container" id="home">
+  <div class="carousel-slide active">
+    <img src="img/banner1.jpg" alt="Monitoramento de energia">
+    <div class="carousel-caption">
+      <h2>Monitore seu consumo de energia</h2>
+      <p>Controle seus aparelhos e reduza gastos em tempo real!</p>
+    </div>
+  </div>
+
+  <div class="carousel-slide">
+    <img src="img/banner2.jpg" alt="Relatórios personalizados">
+    <div class="carousel-caption">
+      <h2>Relatórios Personalizados</h2>
+      <p>Compare períodos, imóveis e cômodos de forma inteligente.</p>
+    </div>
+  </div>
+
+  <div class="carousel-slide">
+    <img src="img/banner3.jpg" alt="Sustentabilidade">
+    <div class="carousel-caption">
+      <h2>Sustentabilidade em Foco</h2>
+      <p>Economize energia e contribua para um futuro mais verde.</p>
+    </div>
+  </div>
+
+  <!-- Controles -->
+  <button class="prev">&#10094;</button>
+  <button class="next">&#10095;</button>
+</section>
+    
+
 
     <section id="services" class="services-section">
         <div class="container">
@@ -141,5 +155,35 @@
             <p>&copy; 2025 MCED. Todos os direitos reservados.</p>
         </div>
     </footer>
+
+    <script>
+  const slides = document.querySelectorAll('.carousel-slide');
+  const prev = document.querySelector('.prev');
+  const next = document.querySelector('.next');
+  let index = 0;
+
+  function showSlide(n) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === n);
+    });
+  }
+
+  function nextSlide() {
+    index = (index + 1) % slides.length;
+    showSlide(index);
+  }
+
+  function prevSlide() {
+    index = (index - 1 + slides.length) % slides.length;
+    showSlide(index);
+  }
+
+  next.addEventListener('click', nextSlide);
+  prev.addEventListener('click', prevSlide);
+
+  // Troca automática a cada 6 segundos
+  setInterval(nextSlide, 6000);
+</script>
+
 </body>
 </html>
