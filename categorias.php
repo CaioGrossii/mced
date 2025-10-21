@@ -1,4 +1,5 @@
 <?php
+$pagina_atual = basename($_SERVER['PHP_SELF']);
 session_start();
 
 // Guardião: Verifica se o usuário está logado
@@ -49,24 +50,48 @@ try {
 <body>
     <div class="container">
         <aside class="sidebar">
-            <div class="logo">
-                <h2>MCED</h2>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="dash.php"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                    <li><a href="#"><i class="fa-solid fa-bolt-lightning"></i> Consumo</a></li>
-                    <li><a href="view_imoveis.php"><i class="fas fa-building"></i> Imóveis</a></li>
-                    <li><a href="comodos.php" class="active"><i class="fas fa-door-open"></i> Cômodos</a></li>
-                    <li><a href="categorias.php" class="active"><i class="fas fa-tags"></i> Categorias</a></li>
-                    <li><a href="eletro.php"><i class="fas fa-plug"></i> Eletrodomésticos</a></li>
-                    <li><a href="#"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
-                </ul>
-            </nav>
-            <div class="logout">
-                <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Sair</a>
-            </div>
-        </aside>
+    <div class="logo"><h2>MCED</h2></div>
+    <nav>
+        <ul>
+            <li>
+                <a href="dash.php" class="<?php echo ($pagina_atual == 'dash.php') ? 'active' : ''; ?>">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="#" class="<?php /* echo ($pagina_atual == 'consumo.php') ? 'active' : ''; */ ?>">
+                    <i class="fa-solid fa-bolt-lightning"></i> Consumo
+                </a>
+            </li>
+            <li>
+                <a href="view_imoveis.php" class="<?php echo ($pagina_atual == 'view_imoveis.php') ? 'active' : ''; ?>">
+                    <i class="fas fa-building"></i> Imóveis
+                </a>
+            </li>
+            <li>
+                <a href="comodos.php" class="<?php echo ($pagina_atual == 'comodos.php' || $pagina_atual == 'comodo_editar.php') ? 'active' : ''; ?>">
+                    <i class="fas fa-door-open"></i> Cômodos
+                </a>
+            </li>
+            <li>
+                <a href="categorias.php" class="<?php echo ($pagina_atual == 'categorias.php') ? 'active' : ''; ?>">
+                    <i class="fas fa-tags"></i> Categorias
+                </a>
+            </li>
+            <li>
+                <a href="eletro.php" class="<?php echo ($pagina_atual == 'eletro.php' || $pagina_atual == 'eletro_editar.php') ? 'active' : ''; ?>">
+                    <i class="fas fa-plug"></i> Eletrodomésticos
+                </a>
+            </li>
+            <li>
+                <a href="#" class="<?php /* echo ($pagina_atual == 'relatorios.php') ? 'active' : ''; */ ?>">
+                    <i class="fas fa-chart-bar"></i> Relatórios
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <div class="logout"><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Sair</a></div>
+</aside>
 
         <main class="main-content">
             <header>

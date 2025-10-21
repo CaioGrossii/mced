@@ -1,7 +1,9 @@
 <?php
+// Inicia a sessão para poder acessar as variáveis.
 session_start();
 
 // Garante que o usuário está logado e que temos seu ID.
+// Esta verificação de segurança é crucial.
 if (!isset($_SESSION['usuario_logado']) || !isset($_SESSION['id_cliente'])) {
     header("Location: login.php");
     exit();
@@ -22,28 +24,31 @@ try {
     
     $conexao = new PDO("mysql:host=$servidor;dbname=$banco;charset=utf8", $usuario_db, $senha_db);
     $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    $id_cliente_logado = $_SESSION['id_cliente'];
 
-    // 1. Busca todos os cômodos do cliente para popular o formulário.
+    // 1. Busca todos os cômodos do cliente para popular o formulário de cadastro.
     $sql_comodos_form = "SELECT c.id_comodo, c.ds_comodo, i.rua, i.numero 
                          FROM comodos c
                          JOIN imoveis i ON c.id_imovel = i.id_imovel
                          WHERE i.id_cliente = :id_cliente
                          ORDER BY i.rua, c.ds_comodo";
     $stmt_comodos_form = $conexao->prepare($sql_comodos_form);
-    $stmt_comodos_form->bindParam(':id_cliente', $_SESSION['id_cliente']);
+    $stmt_comodos_form->bindParam(':id_cliente', $id_cliente_logado);
     $stmt_comodos_form->execute();
     $comodos_disponiveis = $stmt_comodos_form->fetchAll(PDO::FETCH_ASSOC);
 
     // 2. Busca as categorias DO CLIENTE para popular o formulário.
     $sql_categorias = "SELECT id_categoria, ds_categoria FROM categorias WHERE id_cliente = :id_cliente ORDER BY ds_categoria ASC";
     $stmt_categorias = $conexao->prepare($sql_categorias);
-    $stmt_categorias->bindParam(':id_cliente', $_SESSION['id_cliente']);
+    $stmt_categorias->bindParam(':id_cliente', $id_cliente_logado);
     $stmt_categorias->execute();
     $categorias_disponiveis = $stmt_categorias->fetchAll(PDO::FETCH_ASSOC);
 
 
     // 3. Busca todos os eletrodomésticos do cliente para a listagem.
-    $sql_eletros = "SELECT e.nm_eletro, e.watts, c.ds_comodo, cat.ds_categoria, i.rua, i.numero
+    // MODIFICAÇÃO: Adicionado "e.id_eletro" para criar o link de edição.
+    $sql_eletros = "SELECT e.id_eletro, e.nm_eletro, e.watts, c.ds_comodo, cat.ds_categoria, i.rua, i.numero
                     FROM eletrodomesticos e
                     JOIN comodos c ON e.id_comodo = c.id_comodo
                     JOIN imoveis i ON c.id_imovel = i.id_imovel
@@ -51,7 +56,7 @@ try {
                     WHERE i.id_cliente = :id_cliente
                     ORDER BY i.rua, c.ds_comodo, e.nm_eletro";
     $stmt_eletros = $conexao->prepare($sql_eletros);
-    $stmt_eletros->bindParam(':id_cliente', $_SESSION['id_cliente']);
+    $stmt_eletros->bindParam(':id_cliente', $id_cliente_logado);
     $stmt_eletros->execute();
     $resultados = $stmt_eletros->fetchAll(PDO::FETCH_ASSOC);
 
@@ -60,8 +65,9 @@ try {
         $endereco = $eletro['rua'] . ', ' . $eletro['numero'];
         $comodo = $eletro['ds_comodo'];
         $eletrodomesticos_agrupados[$endereco][$comodo][] = [
-            'nome' => $eletro['nm_eletro'], 
-            'watts' => $eletro['watts'],
+            'id'        => $eletro['id_eletro'], // Adicionado para usar no link de edição
+            'nome'      => $eletro['nm_eletro'], 
+            'watts'     => $eletro['watts'],
             'categoria' => $eletro['ds_categoria'] ?? 'Não definida' // Usa 'Não definida' se a categoria for nula
         ];
     }
@@ -102,10 +108,20 @@ try {
         <main class="main-content">
             <header><h1>Gerenciar Eletrodomésticos</h1></header>
 
+            <?php if (isset($_GET['sucesso_edicao'])): ?>
+                <div class="card" style="background-color: #d4edda; color: #155724; padding: 15px; margin-bottom: 20px;">
+                    Eletrodoméstico atualizado com sucesso!
+                </div>
+            <?php elseif (isset($_GET['erro'])): ?>
+                <div class="card" style="background-color: #f8d7da; color: #721c24; padding: 15px; margin-bottom: 20px;">
+                    Ocorreu um erro: <?php echo htmlspecialchars($_GET['erro']); ?>
+                </div>
+            <?php endif; ?>
+
             <div class="card" style="margin-bottom: 20px; text-align: left;">
                 <h3>Cadastrar Novo Eletrodoméstico</h3>
                 <form action="processa_eletro.php" method="POST" style="margin-top: 15px;">
-                    <?php if (count($comodos_disponiveis) > 0): ?>
+                    <?php if (count($comodos_disponiveis) > 0 && count($categorias_disponiveis) > 0): ?>
                         <div style="display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end;">
                             
                             <div style="flex: 2; min-width: 200px;">
@@ -153,7 +169,7 @@ try {
                             </div>
                         </div>
                     <?php else: ?>
-                        <p>Você precisa <a href="comodos.php">cadastrar um cômodo</a> antes de poder adicionar eletrodomésticos.</p>
+                        <p>Você precisa ter pelo menos um <a href="comodos.php">cômodo</a> e uma <a href="categorias.php">categoria</a> cadastrados antes de adicionar eletrodomésticos.</p>
                     <?php endif; ?>
                 </form>
             </div>
@@ -163,7 +179,7 @@ try {
                 <?php if ($erro_banco): ?>
                     <p style="color: red;"><?php echo htmlspecialchars($erro_banco); ?></p>
                 <?php elseif (empty($eletrodomesticos_agrupados)): ?>
-                    <p>Nenhum eletrodoméstico cadastrado.</p>
+                    <p>Nenhum eletrodoméstico cadastrado até o momento.</p>
                 <?php else: ?>
                     <?php foreach ($eletrodomesticos_agrupados as $endereco => $comodos): ?>
                         <div class="card" style="margin-bottom: 15px; text-align: left;">
@@ -172,13 +188,18 @@ try {
                             <?php foreach ($comodos as $nome_comodo => $eletros): ?>
                                 <h5 style="margin-top: 10px;"><i class="fas fa-door-open"></i> <?php echo htmlspecialchars($nome_comodo); ?></h5>
                                 <table>
-                                    <thead><tr><th>Eletrodoméstico</th><th>Categoria</th><th>Potência</th></tr></thead>
+                                    <thead><tr><th>Eletrodoméstico</th><th>Categoria</th><th>Potência</th><th>Ações</th></tr></thead>
                                     <tbody>
                                     <?php foreach ($eletros as $eletro): ?>
                                         <tr>
                                             <td><?php echo htmlspecialchars($eletro['nome']); ?></td>
                                             <td><?php echo htmlspecialchars($eletro['categoria']); ?></td>
                                             <td><?php echo htmlspecialchars($eletro['watts']); ?> W</td>
+                                            <td>
+                                                <a href="eletro_editar.php?id=<?php echo $eletro['id']; ?>" title="Editar Eletrodoméstico" style="color: #1e3a8a; text-decoration: none;">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                </td>
                                         </tr>
                                     <?php endforeach; ?>
                                     </tbody>

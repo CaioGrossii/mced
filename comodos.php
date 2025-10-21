@@ -1,17 +1,20 @@
 <?php
+// Inicia a sessão para acessar as variáveis de usuário.
 session_start();
 
+// Guardião de segurança: Garante que o usuário está logado.
 if (!isset($_SESSION['usuario_logado']) || !isset($_SESSION['id_cliente'])) {
     header("Location: login.php");
     exit();
 }
 
-// Lógica para buscar os imóveis e seus respectivos cômodos
-$imoveis_com_comodos = [];
-$imoveis_disponiveis = []; // Para o formulário
+// Inicializa variáveis para evitar erros.
+$imoveis_disponiveis = []; // Para o formulário de cadastro
+$comodos_agrupados = [];   // Para a listagem
 $erro_banco = null;
 
 try {
+    // Configurações e conexão com o banco de dados
     $servidor = "localhost";
     $usuario_db = "root";
     $senha_db = "p1Mc3d25*";
@@ -19,84 +22,94 @@ try {
     
     $conexao = new PDO("mysql:host=$servidor;dbname=$banco;charset=utf8", $usuario_db, $senha_db);
     $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // 1. Busca todos os imóveis do cliente para o dropdown do formulário
-    $sql_imoveis = "SELECT id_imovel, rua, numero FROM imoveis WHERE id_cliente = :id_cliente";
-    $stmt_imoveis = $conexao->prepare($sql_imoveis);
-    $stmt_imoveis->bindParam(':id_cliente', $_SESSION['id_cliente']);
-    $stmt_imoveis->execute();
-    $imoveis_disponiveis = $stmt_imoveis->fetchAll(PDO::FETCH_ASSOC);
-
-    // 2. Busca os cômodos e os agrupa por imóvel
-    $sql_comodos = "SELECT i.id_imovel, i.rua, i.numero, c.ds_comodo
-                    FROM imoveis i
-                    LEFT JOIN comodos c ON i.id_imovel = c.id_imovel
-                    WHERE i.id_cliente = :id_cliente
-                    ORDER BY i.rua, c.ds_comodo";
-    $stmt_comodos = $conexao->prepare($sql_comodos);
-    $stmt_comodos->bindParam(':id_cliente', $_SESSION['id_cliente']);
-    $stmt_comodos->execute();
     
-    $resultados = $stmt_comodos->fetchAll(PDO::FETCH_ASSOC);
+    $id_cliente_logado = $_SESSION['id_cliente'];
 
-    // Organiza os dados em um array agrupado
-    foreach ($resultados as $resultado) {
-        $imoveis_com_comodos[$resultado['id_imovel']]['endereco'] = $resultado['rua'] . ', ' . $resultado['numero'];
-        if ($resultado['ds_comodo']) {
-            $imoveis_com_comodos[$resultado['id_imovel']]['comodos'][] = $resultado['ds_comodo'];
-        }
+    // 1. Busca os imóveis do cliente para popular o <select> do formulário de cadastro.
+    $sql_imoveis_form = "SELECT id_imovel, rua, numero FROM imoveis WHERE id_cliente = :id_cliente ORDER BY rua ASC";
+    $stmt_imoveis_form = $conexao->prepare($sql_imoveis_form);
+    $stmt_imoveis_form->bindParam(':id_cliente', $id_cliente_logado);
+    $stmt_imoveis_form->execute();
+    $imoveis_disponiveis = $stmt_imoveis_form->fetchAll(PDO::FETCH_ASSOC);
+
+    // 2. Busca todos os cômodos do cliente, já ordenados por imóvel.
+    $sql_comodos_lista = "SELECT 
+                              c.id_comodo, c.ds_comodo, 
+                              i.id_imovel, i.rua, i.numero
+                          FROM comodos c
+                          JOIN imoveis i ON c.id_imovel = i.id_imovel
+                          WHERE i.id_cliente = :id_cliente
+                          ORDER BY i.rua, i.numero, c.ds_comodo ASC";
+    $stmt_comodos_lista = $conexao->prepare($sql_comodos_lista);
+    $stmt_comodos_lista->bindParam(':id_cliente', $id_cliente_logado);
+    $stmt_comodos_lista->execute();
+    $resultados = $stmt_comodos_lista->fetchAll(PDO::FETCH_ASSOC);
+
+    // 3. Agrupa os cômodos por imóvel para facilitar a exibição.
+    foreach ($resultados as $comodo) {
+        $endereco_imovel = $comodo['rua'] . ', ' . $comodo['numero'];
+        $comodos_agrupados[$endereco_imovel][] = [
+            'id' => $comodo['id_comodo'],
+            'nome' => $comodo['ds_comodo']
+        ];
     }
 
 } catch (PDOException $e) {
-    error_log("Erro ao buscar cômodos: " . $e->getMessage());
+    error_log("Erro ao buscar dados para a página de cômodos: " . $e->getMessage());
     $erro_banco = "Não foi possível carregar os dados. Tente novamente mais tarde.";
 } finally {
-    $conexao = null;
+    $conexao = null; // Fecha a conexão.
 }
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>MCED - Meus Cômodos</title>
+    <title>MCED - Gerenciar Cômodos</title>
     <link rel="stylesheet" href="dash.css">
+    <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <aside class="sidebar">
-            <div class="logo">
-                <h2>MCED</h2>
-            </div>
+            <div class="logo"><h2>MCED</h2></div>
             <nav>
                 <ul>
                     <li><a href="dash.php"><i class="fa-solid fa-house"></i> Dashboard</a></li>
                     <li><a href="#"><i class="fa-solid fa-bolt-lightning"></i> Consumo</a></li>
                     <li><a href="view_imoveis.php"><i class="fas fa-building"></i> Imóveis</a></li>
                     <li><a href="comodos.php" class="active"><i class="fas fa-door-open"></i> Cômodos</a></li>
-                    <li><a href="categorias.php" class="active"><i class="fas fa-tags"></i> Categorias</a></li>
+                    <li><a href="categorias.php"><i class="fas fa-tags"></i> Categorias</a></li>
                     <li><a href="eletro.php"><i class="fas fa-plug"></i> Eletrodomésticos</a></li>
                     <li><a href="#"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
                 </ul>
             </nav>
-            <div class="logout">
-                <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Sair</a>
-            </div>
+            <div class="logout"><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Sair</a></div>
         </aside>
 
         <main class="main-content">
-            <header>
-                <h1>Gerenciar Cômodos</h1>
-            </header>
+            <header><h1>Gerenciar Cômodos</h1></header>
+
+            <?php if (isset($_GET['sucesso_edicao'])): ?>
+                <div class="card" style="background-color: #d4edda; color: #155724; padding: 15px; margin-bottom: 20px; text-align:left;">
+                    Cômodo atualizado com sucesso!
+                </div>
+            <?php elseif (isset($_GET['erro'])): ?>
+                <div class="card" style="background-color: #f8d7da; color: #721c24; padding: 15px; margin-bottom: 20px; text-align:left;">
+                    Ocorreu um erro: <?php echo htmlspecialchars(urldecode($_GET['erro'])); ?>
+                </div>
+            <?php endif; ?>
 
             <div class="card" style="margin-bottom: 20px; text-align: left;">
                 <h3>Cadastrar Novo Cômodo</h3>
-                <form action="processa_comodo.php" method="POST" style="margin-top: 15px;">
+                <form action="processa_comodo.php" method="POST" style="margin-top: 1.5rem;">
                     <?php if (count($imoveis_disponiveis) > 0): ?>
-                        <div style="display: flex; gap: 15px;">
-                            <div style="flex: 2;">
+                        <div class="form-grid">
+                            <div class="form-group">
                                 <label for="id_imovel">Selecione o Imóvel</label>
-                                <select name="id_imovel" id="id_imovel" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ddd;">
+                                <select name="id_imovel" id="id_imovel" required>
+                                    <option value="">Escolha um imóvel...</option>
                                     <?php foreach ($imoveis_disponiveis as $imovel): ?>
                                         <option value="<?php echo $imovel['id_imovel']; ?>">
                                             <?php echo htmlspecialchars($imovel['rua'] . ', ' . $imovel['numero']); ?>
@@ -104,16 +117,16 @@ try {
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            <div style="flex: 1;">
+                            <div class="form-group">
                                 <label for="ds_comodo">Nome do Cômodo</label>
-                                <input type="text" name="ds_comodo" id="ds_comodo" placeholder="Ex: Cozinha" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ddd;">
+                                <input type="text" name="ds_comodo" id="ds_comodo" placeholder="Ex: Cozinha" required>
                             </div>
-                            <div style="align-self: flex-end;">
-                                <button type="submit" style="padding: 10px 15px; border-radius: 4px; background-color: #2563eb; color: white; border: none; cursor: pointer;">Salvar</button>
+                            <div class="form-actions" style="margin-top: 0; justify-content: flex-end;">
+                                <button type="submit" class="btn">Salvar</button>
                             </div>
                         </div>
                     <?php else: ?>
-                        <p>Você precisa <a href="imoveis.php">cadastrar um imóvel</a> antes de poder adicionar cômodos.</p>
+                        <p>Você precisa <a href="view_imoveis.php">cadastrar um imóvel</a> antes de adicionar cômodos.</p>
                     <?php endif; ?>
                 </form>
             </div>
@@ -122,22 +135,23 @@ try {
                 <h3>Cômodos por Imóvel</h3>
                 <?php if ($erro_banco): ?>
                     <p style="color: red;"><?php echo htmlspecialchars($erro_banco); ?></p>
-                <?php elseif (empty($imoveis_com_comodos)): ?>
-                    <p>Nenhum cômodo cadastrado.</p>
+                <?php elseif (empty($comodos_agrupados)): ?>
+                    <p>Nenhum cômodo cadastrado até o momento.</p>
                 <?php else: ?>
-                    <?php foreach ($imoveis_com_comodos as $imovel_id => $data): ?>
-                        <div class="card" style="margin-bottom: 15px; text-align: left;">
-                            <h4><i class="fas fa-home"></i> <?php echo htmlspecialchars($data['endereco']); ?></h4>
-                            <hr style="margin: 10px 0;">
-                            <?php if (isset($data['comodos'])): ?>
-                                <ul style="list-style: none; padding-left: 0;">
-                                    <?php foreach ($data['comodos'] as $comodo): ?>
-                                        <li style="padding: 5px 0;"><i class="fas fa-door-open" style="margin-right: 8px;"></i> <?php echo htmlspecialchars($comodo); ?></li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            <?php else: ?>
-                                <p>Nenhum cômodo cadastrado para este imóvel.</p>
-                            <?php endif; ?>
+                    <?php foreach ($comodos_agrupados as $endereco => $comodos): ?>
+                        <div style="padding: 15px 0;">
+                            <h4 style="font-size: 1.1rem; color: #1e3a8a;"><i class="fas fa-home" style="margin-right: 8px;"></i><?php echo htmlspecialchars($endereco); ?></h4>
+                            <hr style="margin: 10px 0; border-color: #f0f0f0;">
+                            
+                            <?php foreach ($comodos as $comodo): ?>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 5px; border-bottom: 1px solid #f9f9f9;">
+                                    <span><i class="fas fa-door-open" style="margin-right: 8px; color: #6b7280;"></i><?php echo htmlspecialchars($comodo['nome']); ?></span>
+                                    
+                                    <a href="comodo_editar.php?id=<?php echo $comodo['id']; ?>" title="Editar Cômodo" style="color: #2563eb; text-decoration: none;">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>

@@ -44,9 +44,11 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
 
         <main class="main-content">
             <header>
-                <h1>Bem-vindo, <?php echo htmlspecialchars($_SESSION['nome_usuario'] ?? 'Usuário'); ?></h1>
+                <h1>Bem-vindo, <?php echo htmlspecialchars($_SESSION['nome_usuario']); ?></h1>
                 <div class="user-info">
-                    <img src="img/antero.jpg" alt="Avatar">
+                    <a href="perfil.php" title="Editar Perfil">
+                        <img src="img/antonello 2.png" alt="Avatar">
+                    </a>
                 </div>
             </header>
 
