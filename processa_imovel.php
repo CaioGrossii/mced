@@ -11,6 +11,7 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 3. COLETA E LIMPEZA DOS DADOS DO FORMULÁRIO
+    $fantasia = trim(htmlspecialchars($_POST['fantasia']));
     $rua = trim(htmlspecialchars($_POST['rua']));
     $numero = trim(htmlspecialchars($_POST['numero']));
     $bairro = trim(htmlspecialchars($_POST['bairro']));
@@ -23,6 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // 4. VALIDAÇÃO DOS DADOS NO SERVIDOR
     $erros = [];
+    if (empty($fantasia)) $erros[] = "O campo Fantasia é obrigatório.";
     if (empty($rua)) $erros[] = "O campo Rua é obrigatório.";
     if (empty($numero)) $erros[] = "O campo Número é obrigatório.";
     if (empty($bairro)) $erros[] = "O campo Bairro é obrigatório.";
@@ -45,12 +47,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             // Query SQL parametrizada para evitar SQL Injection
-            $sql = "INSERT INTO imoveis (rua, numero, bairro, cidade, estado, cep, id_cliente) 
-                    VALUES (:rua, :numero, :bairro, :cidade, :estado, :cep, :id_cliente)";
+            $sql = "INSERT INTO imoveis (fantasia, rua, numero, bairro, cidade, estado, cep, id_cliente) 
+                    VALUES (:fantasia, :rua, :numero, :bairro, :cidade, :estado, :cep, :id_cliente)";
             
             $stmt = $conexao->prepare($sql);
             
             // Vinculando os parâmetros
+            $stmt->bindParam(':fantasia', $fantasia);
             $stmt->bindParam(':rua', $rua);
             $stmt->bindParam(':numero', $numero);
             $stmt->bindParam(':bairro', $bairro);

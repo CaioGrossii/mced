@@ -15,6 +15,7 @@ CREATE TABLE clientes (
 -- Tabela Imoveis (Depende de Clientes)
 CREATE TABLE imoveis (
     id_imovel INT AUTO_INCREMENT PRIMARY KEY,
+    fantasia VARCHAR(50) NOT NULL,
     rua VARCHAR(100) NOT NULL,
     numero VARCHAR(10) NOT NULL, 
     bairro VARCHAR(50) NOT NULL,

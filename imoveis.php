@@ -20,6 +20,13 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
         <h1>MCED - Novo Imóvel</h1>
         
         <form id="cadastroImovelForm" action="processa_imovel.php" method="POST">
+
+            <div class="form-row">
+                <div class="form-group-half">
+                    <label for="rua">Nome do Imóvel</label>
+                    <input type="text" id="fantasia" name="fantasia" placeholder="Ex: Casa do Lago" required>
+                </div>
+            </div>
             
             <div class="form-row">
                 <div class="form-group-half">

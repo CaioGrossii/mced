@@ -20,7 +20,7 @@ try {
     $conexao = new PDO("mysql:host=$servidor;dbname=$banco;charset=utf8", $usuario_db, $senha_db);
     $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $sql = "SELECT rua, numero, bairro, cidade, estado, cep FROM imoveis WHERE id_cliente = :id_cliente ORDER BY id_imovel DESC";
+    $sql = "SELECT fantasia, rua, numero, bairro, cidade, estado, cep FROM imoveis WHERE id_cliente = :id_cliente ORDER BY id_imovel DESC";
     $stmt = $conexao->prepare($sql);
     
     $stmt->bindParam(':id_cliente', $_SESSION['id_cliente']);
@@ -101,6 +101,7 @@ try {
                     <table>
                         <thead>
                             <tr>
+                                <th>Imóvel</th>
                                 <th>Rua / Logradouro</th>
                                 <th>Número</th>
                                 <th>Bairro</th>
@@ -113,6 +114,7 @@ try {
                             <?php if (count($imoveis) > 0): ?>
                                 <?php foreach ($imoveis as $imovel): ?>
                                     <tr>
+                                        <td><?php echo htmlspecialchars($imovel['fantasia']); ?></td>
                                         <td><?php echo htmlspecialchars($imovel['rua']); ?></td>
                                         <td><?php echo htmlspecialchars($imovel['numero']); ?></td>
                                         <td><?php echo htmlspecialchars($imovel['bairro']); ?></td>
