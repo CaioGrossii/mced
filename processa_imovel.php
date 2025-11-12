@@ -1,41 +1,35 @@
 <?php
 session_start();
 
-// 1. VERIFICAÇÃO DE SESSÃO
 if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true) {
     header("Location: login.php");
     exit();
 }
 
-// 2. VERIFICAÇÃO DO MÉTODO DA REQUISIÇÃO
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // 3. COLETA E LIMPEZA DOS DADOS DO FORMULÁRIO
-    $fantasia = trim(htmlspecialchars($_POST['fantasia']));
+    // Coleta e limpeza dos dados
+    $fantasia = trim(htmlspecialchars($_POST['fantasia'])); // NOVO CAMPO
     $rua = trim(htmlspecialchars($_POST['rua']));
     $numero = trim(htmlspecialchars($_POST['numero']));
     $bairro = trim(htmlspecialchars($_POST['bairro']));
     $cidade = trim(htmlspecialchars($_POST['cidade']));
-    $estado = trim(htmlspecialchars(strtoupper($_POST['estado']))); // Garante UF em maiúsculo
+    $estado = trim(htmlspecialchars(strtoupper($_POST['estado'])));
     $cep = trim(htmlspecialchars($_POST['cep']));
-    
-    // Assumindo que o ID do cliente está na sessão. É crucial que isso seja definido no login.
-    $id_cliente = $_SESSION['id_cliente']; // ATENÇÃO: Verifique se 'id_cliente' é o nome correto na sua sessão!
+    $id_cliente = $_SESSION['id_cliente'];
 
-    // 4. VALIDAÇÃO DOS DADOS NO SERVIDOR
+    // Validação dos dados no servidor
     $erros = [];
-    if (empty($fantasia)) $erros[] = "O campo Fantasia é obrigatório.";
+    if (empty($fantasia)) $erros[] = "O Nome do Imóvel é obrigatório."; // VALIDAÇÃO DO NOVO CAMPO
     if (empty($rua)) $erros[] = "O campo Rua é obrigatório.";
     if (empty($numero)) $erros[] = "O campo Número é obrigatório.";
     if (empty($bairro)) $erros[] = "O campo Bairro é obrigatório.";
     if (empty($cidade)) $erros[] = "O campo Cidade é obrigatório.";
     if (strlen($estado) != 2) $erros[] = "O Estado (UF) deve ter exatamente 2 caracteres.";
     if (!preg_match('/^\d{5}-\d{3}$/', $cep)) $erros[] = "O formato do CEP é inválido. Use XXXXX-XXX.";
-    if (empty($id_cliente)) $erros[] = "Erro de autenticação. Faça login novamente."; // Validação de segurança
+    if (empty($id_cliente)) $erros[] = "Erro de autenticação. Faça login novamente.";
 
-    // 5. PROCESSAMENTO (SE NÃO HOUVER ERROS)
     if (empty($erros)) {
-        // Credenciais do banco de dados (idealmente, estariam fora do docroot em um arquivo .env)
         $servidor = "localhost";
         $usuario_db = "root";
         $senha_db = "p1Mc3d25*";
@@ -46,14 +40,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $conexao = new PDO("mysql:host=$servidor;dbname=$banco;charset=utf8", $usuario_db, $senha_db);
             $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            // Query SQL parametrizada para evitar SQL Injection
+            // Query SQL ATUALIZADA com o campo 'fantasia'
             $sql = "INSERT INTO imoveis (fantasia, rua, numero, bairro, cidade, estado, cep, id_cliente) 
                     VALUES (:fantasia, :rua, :numero, :bairro, :cidade, :estado, :cep, :id_cliente)";
             
             $stmt = $conexao->prepare($sql);
             
-            // Vinculando os parâmetros
-            $stmt->bindParam(':fantasia', $fantasia);
+            // Vinculando os parâmetros (bindParam)
+            $stmt->bindParam(':fantasia', $fantasia); // BIND DO NOVO CAMPO
             $stmt->bindParam(':rua', $rua);
             $stmt->bindParam(':numero', $numero);
             $stmt->bindParam(':bairro', $bairro);
@@ -64,20 +58,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $stmt->execute();
             
-            // Redireciona para a dashboard com mensagem de sucesso
-            header("Location: /mced/dash.php?msg=imovel_sucesso");
+            // Redireciona para a listagem (view_imoveis.php)
+            header("Location: view_imoveis.php?msg=imovel_sucesso");
             exit();
 
         } catch(PDOException $e) {
-            // Log do erro para depuração e mensagem genérica para o usuário
             error_log("Erro no cadastro de imóvel: " . $e->getMessage());
             die("Ocorreu um erro inesperado ao salvar os dados. Tente novamente mais tarde.");
         } finally {
-            $conexao = null; // Garante que a conexão seja sempre fechada
+            $conexao = null;
         }
         
     } else {
-        // Se houver erros de validação, exibe-os de forma clara
+        // Tratamento de erros de validação
         echo "<h1>Erro no Cadastro do Imóvel</h1>";
         echo "<p>Por favor, corrija os seguintes erros:</p>";
         echo "<ul>";
@@ -89,7 +82,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
 } else {
-    // Se o script for acessado diretamente (via GET), redireciona para o formulário
     header("Location: imoveis.php");
     exit();
 }

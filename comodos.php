@@ -26,7 +26,7 @@ try {
     $id_cliente_logado = $_SESSION['id_cliente'];
 
     // 1. Busca os imóveis do cliente para popular o <select> do formulário de cadastro.
-    $sql_imoveis_form = "SELECT id_imovel, rua, numero FROM imoveis WHERE id_cliente = :id_cliente ORDER BY rua ASC";
+    $sql_imoveis_form = "SELECT id_imovel, fantasia, numero FROM imoveis WHERE id_cliente = :id_cliente ORDER BY fantasia ASC";
     $stmt_imoveis_form = $conexao->prepare($sql_imoveis_form);
     $stmt_imoveis_form->bindParam(':id_cliente', $id_cliente_logado);
     $stmt_imoveis_form->execute();
@@ -35,11 +35,11 @@ try {
     // 2. Busca todos os cômodos do cliente, já ordenados por imóvel.
     $sql_comodos_lista = "SELECT 
                               c.id_comodo, c.ds_comodo, 
-                              i.id_imovel, i.rua, i.numero
+                              i.id_imovel, i.fantasia, i.numero
                           FROM comodos c
                           JOIN imoveis i ON c.id_imovel = i.id_imovel
                           WHERE i.id_cliente = :id_cliente
-                          ORDER BY i.rua, i.numero, c.ds_comodo ASC";
+                          ORDER BY i.fantasia, i.numero, c.ds_comodo ASC";
     $stmt_comodos_lista = $conexao->prepare($sql_comodos_lista);
     $stmt_comodos_lista->bindParam(':id_cliente', $id_cliente_logado);
     $stmt_comodos_lista->execute();
@@ -47,7 +47,7 @@ try {
 
     // 3. Agrupa os cômodos por imóvel para facilitar a exibição.
     foreach ($resultados as $comodo) {
-        $endereco_imovel = $comodo['rua'] . ', ' . $comodo['numero'];
+        $endereco_imovel = $comodo['fantasia'] . ', ' . $comodo['numero'];
         $comodos_agrupados[$endereco_imovel][] = [
             'id' => $comodo['id_comodo'],
             'nome' => $comodo['ds_comodo']
@@ -112,7 +112,7 @@ try {
                                     <option value="">Escolha um imóvel...</option>
                                     <?php foreach ($imoveis_disponiveis as $imovel): ?>
                                         <option value="<?php echo $imovel['id_imovel']; ?>">
-                                            <?php echo htmlspecialchars($imovel['rua'] . ', ' . $imovel['numero']); ?>
+                                            <?php echo htmlspecialchars($imovel['fantasia'] ); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>

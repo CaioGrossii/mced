@@ -12,7 +12,6 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MCED - Cadastro de Imóvel</title>
-
     <link rel="stylesheet" href="imoveis.css"> 
 </head>
 <body>
@@ -20,17 +19,17 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
         <h1>MCED - Novo Imóvel</h1>
         
         <form id="cadastroImovelForm" action="processa_imovel.php" method="POST">
-
+            
             <div class="form-row">
                 <div class="form-group-half">
-                    <label for="rua">Nome do Imóvel</label>
+                    <label for="fantasia">Nome do Imóvel</label>
                     <input type="text" id="fantasia" name="fantasia" placeholder="Ex: Casa do Lago" required>
                 </div>
             </div>
             
             <div class="form-row">
                 <div class="form-group-half">
-                    <label for="rua">Rua / Logradouro</label>
+                    <label for="rua">Logradouro</label>
                     <input type="text" id="rua" name="rua" placeholder="Ex: Rua das Flores" required>
                 </div>
 
@@ -70,7 +69,7 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
         <div id="feedback"></div>
 
         <div class="extra-links">
-             <a href="dash.php">Voltar para a Dashboard</a>
+             <a href="view_imoveis.php">Voltar para a Listagem</a>
         </div> 
     </div>
 

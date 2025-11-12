@@ -1,15 +1,25 @@
 <?php
 session_start();
 
-// 1. GUARDIÃO: Protege a página contra acesso de usuários não logados.
 if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true || !isset($_SESSION['id_cliente'])) {
     header("Location: login.php");
     exit();
 }
 
-// 2. LÓGICA PARA BUSCAR OS IMÓVEIS NO BANCO DE DADOS
 $imoveis = [];
 $erro_banco = null;
+$feedback_sucesso = null;
+
+// --- Feedback de Sucesso/Erro ---
+if (isset($_GET['sucesso'])) {
+    if ($_GET['sucesso'] == 'update') $feedback_sucesso = "Imóvel atualizado com sucesso!";
+    if ($_GET['sucesso'] == 'delete') $feedback_sucesso = "Imóvel excluído com sucesso!";
+}
+if (isset($_GET['erro'])) {
+    if ($_GET['erro'] == 'dependencia') $feedback_erro = "Erro: Não é possível excluir um imóvel que possui cômodos cadastrados.";
+    if ($_GET['erro'] == 'permissao') $feedback_erro = "Erro: Você não tem permissão para realizar esta ação.";
+}
+// --- Fim do Feedback ---
 
 try {
     $servidor = "localhost";
@@ -20,9 +30,13 @@ try {
     $conexao = new PDO("mysql:host=$servidor;dbname=$banco;charset=utf8", $usuario_db, $senha_db);
     $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $sql = "SELECT fantasia, rua, numero, bairro, cidade, estado, cep FROM imoveis WHERE id_cliente = :id_cliente ORDER BY id_imovel DESC";
+    // Seleciona o id_imovel (para os links) e o novo campo fantasia
+    $sql = "SELECT id_imovel, fantasia, rua, numero, bairro, cidade, estado, cep 
+            FROM imoveis 
+            WHERE id_cliente = :id_cliente 
+            ORDER BY fantasia ASC";
+            
     $stmt = $conexao->prepare($sql);
-    
     $stmt->bindParam(':id_cliente', $_SESSION['id_cliente']);
     $stmt->execute();
     
@@ -45,43 +59,52 @@ try {
     
     <style>
         .btn-header {
-            background-color: #2563eb;
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: background-color 0.3s;
+            background-color: #2563eb; color: #fff; padding: 10px 15px;
+            border-radius: 8px; text-decoration: none; font-size: 14px;
+            font-weight: 600; display: inline-flex; align-items: center;
+            gap: 8px; transition: background-color 0.3s;
         }
-        .btn-header:hover {
-            background-color: #1e40af;
+        .btn-header:hover { background-color: #1e40af; }
+        
+        /* Estilos para botões de ação na tabela */
+        .action-link {
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        .btn-edit {
+            background-color: #f0f0f0; color: #333;
+        }
+        .btn-delete {
+            background-color: #fee2e2; color: #991b1b;
+        }
+        .feedback-sucesso {
+            background-color: #d4edda; color: #155724; padding: 15px; margin-bottom: 20px; border-radius: 8px;
+        }
+        .feedback-erro {
+            background-color: #f8d7da; color: #721c24; padding: 15px; margin-bottom: 20px; border-radius: 8px;
         }
     </style>
-    </head>
+</head>
 <body>
     <div class="container">
         <aside class="sidebar">
-            <div class="logo">
-                <h2>MCED</h2>
-            </div>
+            <div class="logo"><h2>MCED</h2></div>
             <nav>
-                <ul>
+                 <ul>
                     <li><a href="dash.php"><i class="fa-solid fa-house"></i> Dashboard</a></li>
                     <li><a href="#"><i class="fa-solid fa-bolt-lightning"></i> Consumo</a></li>
-                    <li><a href="view_imoveis.php"><i class="fas fa-building"></i> Imóveis</a></li>
+                    <li><a href="view_imoveis.php" class="active"><i class="fas fa-building"></i> Imóveis</a></li>
                     <li><a href="comodos.php"><i class="fas fa-door-open"></i> Cômodos</a></li>
                     <li><a href="categorias.php"><i class="fas fa-tags"></i> Categorias</a></li>
                     <li><a href="eletro.php"><i class="fas fa-plug"></i> Eletrodomésticos</a></li>
-                    <li><a href="#"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+                    <li><a href="relatorios.php"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
                 </ul>
             </nav>
-            <div class="logout">
-                <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Sair</a>
-            </div>
+            <div class="logout"><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Sair</a></div>
         </aside>
 
         <main class="main-content">
@@ -92,6 +115,14 @@ try {
                     Novo Imóvel
                 </a>
             </header>
+            
+            <?php if ($feedback_sucesso): ?>
+                <div class="feedback-sucesso"><?php echo htmlspecialchars($feedback_sucesso); ?></div>
+            <?php endif; ?>
+            <?php if (isset($feedback_erro)): ?>
+                <div class="feedback-erro"><?php echo htmlspecialchars($feedback_erro); ?></div>
+            <?php endif; ?>
+
             <div class="table-card">
                 <h3>Lista de Imóveis</h3>
                 
@@ -101,13 +132,13 @@ try {
                     <table>
                         <thead>
                             <tr>
-                                <th>Imóvel</th>
+                                <th>Nome do Imóvel</th>
                                 <th>Rua / Logradouro</th>
                                 <th>Número</th>
                                 <th>Bairro</th>
                                 <th>Cidade</th>
-                                <th>Estado</th>
-                                <th>CEP</th>
+                                <th>UF</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -120,12 +151,19 @@ try {
                                         <td><?php echo htmlspecialchars($imovel['bairro']); ?></td>
                                         <td><?php echo htmlspecialchars($imovel['cidade']); ?></td>
                                         <td><?php echo htmlspecialchars($imovel['estado']); ?></td>
-                                        <td><?php echo htmlspecialchars($imovel['cep']); ?></td>
+                                        <td>
+                                            <a href="imovel_editar.php?id=<?php echo $imovel['id_imovel']; ?>" class="action-link btn-edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="processa_imovel_delete.php?id=<?php echo $imovel['id_imovel']; ?>" class="action-link btn-delete" onclick="return confirm('Atenção: Esta ação não pode ser desfeita. Deseja realmente excluir este imóvel?');">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="6" style="text-align: center;">Nenhum imóvel cadastrado ainda.</td>
+                                    <td colspan="7" style="text-align: center;">Nenhum imóvel cadastrado ainda.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
