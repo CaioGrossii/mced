@@ -195,14 +195,30 @@ try {
                                             <td><?php echo htmlspecialchars($eletro['nome']); ?></td>
                                             <td><?php echo htmlspecialchars($eletro['categoria']); ?></td>
                                             <td><?php echo htmlspecialchars($eletro['watts']); ?> W</td>
-                                            <td>
-                                                <a href="eletro_editar.php?id=<?php echo $eletro['id']; ?>" title="Editar Eletrodoméstico" style="color: #1e3a8a; text-decoration: none;">
+                                            
+                                            <td style="display: flex; gap: 15px;">
+                                                <a href="eletro_editar.php?id=<?php echo $eletro['id']; ?>" 
+                                                title="Editar Eletrodoméstico" 
+                                                style="color: #1e3a8a; text-decoration: none;">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                </td>
+
+                                                <form action="processa_eletro_delete.php" method="POST" 
+                                                    style="margin: 0; padding: 0;"
+                                                    onsubmit="return confirm('Tem certeza que deseja excluir <?php echo htmlspecialchars(addslashes($eletro['nome'])); ?>? Esta ação não pode ser desfeita.');">
+                                                    
+                                                    <input type="hidden" name="id_eletro" value="<?php echo $eletro['id']; ?>">
+                                                    
+                                                    <button type="submit" 
+                                                            title="Excluir Eletrodoméstico" 
+                                                            style="background: none; border: none; color: #dc3545; cursor: pointer; padding: 0; font-size: 1em;">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
-                                    </tbody>
+                                </tbody>
                                 </table>
                             <?php endforeach; ?>
                         </div>
