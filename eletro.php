@@ -28,11 +28,11 @@ try {
     $id_cliente_logado = $_SESSION['id_cliente'];
 
     // 1. Busca todos os cômodos do cliente para popular o formulário de cadastro.
-    $sql_comodos_form = "SELECT c.id_comodo, c.ds_comodo, i.rua, i.numero 
+    $sql_comodos_form = "SELECT c.id_comodo, c.ds_comodo, i.fantasia
                          FROM comodos c
                          JOIN imoveis i ON c.id_imovel = i.id_imovel
                          WHERE i.id_cliente = :id_cliente
-                         ORDER BY i.rua, c.ds_comodo";
+                         ORDER BY i.fantasia, c.ds_comodo";
     $stmt_comodos_form = $conexao->prepare($sql_comodos_form);
     $stmt_comodos_form->bindParam(':id_cliente', $id_cliente_logado);
     $stmt_comodos_form->execute();
@@ -48,13 +48,13 @@ try {
 
     // 3. Busca todos os eletrodomésticos do cliente para a listagem.
     // MODIFICAÇÃO: Adicionado "e.id_eletro" para criar o link de edição.
-    $sql_eletros = "SELECT e.id_eletro, e.nm_eletro, e.watts, c.ds_comodo, cat.ds_categoria, i.rua, i.numero
+    $sql_eletros = "SELECT e.id_eletro, e.nm_eletro, e.watts, c.ds_comodo, cat.ds_categoria, i.fantasia
                     FROM eletrodomesticos e
                     JOIN comodos c ON e.id_comodo = c.id_comodo
                     JOIN imoveis i ON c.id_imovel = i.id_imovel
                     LEFT JOIN categorias cat ON e.id_categoria = cat.id_categoria
                     WHERE i.id_cliente = :id_cliente
-                    ORDER BY i.rua, c.ds_comodo, e.nm_eletro";
+                    ORDER BY i.fantasia, c.ds_comodo, e.nm_eletro";
     $stmt_eletros = $conexao->prepare($sql_eletros);
     $stmt_eletros->bindParam(':id_cliente', $id_cliente_logado);
     $stmt_eletros->execute();
@@ -62,7 +62,7 @@ try {
 
     // Organiza os resultados em um array agrupado para facilitar a exibição.
     foreach ($resultados as $eletro) {
-        $endereco = $eletro['rua'] . ', ' . $eletro['numero'];
+        $endereco = $eletro['fantasia'] ;
         $comodo = $eletro['ds_comodo'];
         $eletrodomesticos_agrupados[$endereco][$comodo][] = [
             'id'        => $eletro['id_eletro'], // Adicionado para usar no link de edição
@@ -131,7 +131,7 @@ try {
                                     <?php
                                     $imovel_atual = '';
                                     foreach ($comodos_disponiveis as $comodo):
-                                        $endereco = htmlspecialchars($comodo['rua'] . ', ' . $comodo['numero']);
+                                        $endereco = htmlspecialchars($comodo['fantasia']);
                                         if ($endereco !== $imovel_atual) {
                                             if ($imovel_atual !== '') echo '</optgroup>';
                                             echo '<optgroup label="' . $endereco . '">';

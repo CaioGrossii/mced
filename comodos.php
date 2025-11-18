@@ -25,21 +25,21 @@ try {
     
     $id_cliente_logado = $_SESSION['id_cliente'];
 
-    // 1. Busca os imóveis do cliente para popular o <select> do formulário de cadastro.
-    $sql_imoveis_form = "SELECT id_imovel, fantasia, numero FROM imoveis WHERE id_cliente = :id_cliente ORDER BY fantasia ASC";
+    // 1. Busca os imóveis do cliente para popular o <select> do formulário de cadastro. (Usando 'fantasia')
+    $sql_imoveis_form = "SELECT id_imovel, fantasia FROM imoveis WHERE id_cliente = :id_cliente ORDER BY fantasia ASC";
     $stmt_imoveis_form = $conexao->prepare($sql_imoveis_form);
     $stmt_imoveis_form->bindParam(':id_cliente', $id_cliente_logado);
     $stmt_imoveis_form->execute();
     $imoveis_disponiveis = $stmt_imoveis_form->fetchAll(PDO::FETCH_ASSOC);
 
-    // 2. Busca todos os cômodos do cliente, já ordenados por imóvel.
+    // 2. Busca todos os cômodos do cliente, já ordenados por imóvel. (Usando 'fantasia')
     $sql_comodos_lista = "SELECT 
                               c.id_comodo, c.ds_comodo, 
-                              i.id_imovel, i.fantasia, i.numero
+                              i.id_imovel, i.fantasia
                           FROM comodos c
                           JOIN imoveis i ON c.id_imovel = i.id_imovel
                           WHERE i.id_cliente = :id_cliente
-                          ORDER BY i.fantasia, i.numero, c.ds_comodo ASC";
+                          ORDER BY i.fantasia, c.ds_comodo ASC";
     $stmt_comodos_lista = $conexao->prepare($sql_comodos_lista);
     $stmt_comodos_lista->bindParam(':id_cliente', $id_cliente_logado);
     $stmt_comodos_lista->execute();
@@ -47,7 +47,7 @@ try {
 
     // 3. Agrupa os cômodos por imóvel para facilitar a exibição.
     foreach ($resultados as $comodo) {
-        $endereco_imovel = $comodo['fantasia'] . ', ' . $comodo['numero'];
+        $endereco_imovel = $comodo['fantasia'];
         $comodos_agrupados[$endereco_imovel][] = [
             'id' => $comodo['id_comodo'],
             'nome' => $comodo['ds_comodo']
@@ -93,7 +93,15 @@ try {
 
             <?php if (isset($_GET['sucesso_edicao'])): ?>
                 <div class="card" style="background-color: #d4edda; color: #155724; padding: 15px; margin-bottom: 20px; text-align:left;">
-                    Cômodo atualizado com sucesso!
+                    <?php 
+                        if ($_GET['sucesso_edicao'] == 1) {
+                            echo "Cômodo atualizado com sucesso!";
+                        } elseif ($_GET['sucesso_edicao'] == 2) {
+                            echo "Cômodo excluído com sucesso!";
+                        } else {
+                            echo "Operação realizada com sucesso!";
+                        }
+                    ?>
                 </div>
             <?php elseif (isset($_GET['erro'])): ?>
                 <div class="card" style="background-color: #f8d7da; color: #721c24; padding: 15px; margin-bottom: 20px; text-align:left;">
@@ -147,9 +155,17 @@ try {
                                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 5px; border-bottom: 1px solid #f9f9f9;">
                                     <span><i class="fas fa-door-open" style="margin-right: 8px; color: #6b7280;"></i><?php echo htmlspecialchars($comodo['nome']); ?></span>
                                     
-                                    <a href="comodo_editar.php?id=<?php echo $comodo['id']; ?>" title="Editar Cômodo" style="color: #2563eb; text-decoration: none;">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
+                                    <div>
+                                        <a href="comodo_editar.php?id=<?php echo $comodo['id']; ?>" title="Editar Cômodo" style="color: #2563eb; text-decoration: none;">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="comodo_excluir.php?id=<?php echo $comodo['id']; ?>" 
+                                           title="Excluir Cômodo" 
+                                           style="color: red; text-decoration: none; margin-left: 15px;"
+                                           onclick="return confirm('Tem certeza que deseja excluir este cômodo? Todos os eletrodomésticos vinculados devem ser removidos primeiro.');">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             <?php endforeach; ?>
                         </div>
