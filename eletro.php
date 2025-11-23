@@ -9,6 +9,9 @@ if (!isset($_SESSION['usuario_logado']) || !isset($_SESSION['id_cliente'])) {
     exit();
 }
 
+// Pega o nome da sessão (se foi definido no cadastro) ou usa um padrão
+$nome_usuario_logado = $_SESSION['nome_usuario'] ?? 'Usuário Demo';
+
 // Inicializa os arrays que serão preenchidos com dados do banco.
 $comodos_disponiveis = [];
 $categorias_disponiveis = [];
@@ -96,14 +99,19 @@ try {
                     <li><a href="comodos.php"><i class="fas fa-door-open"></i> Cômodos</a></li>
                     <li><a href="categorias.php"><i class="fas fa-tags"></i> Categorias</a></li>
                     <li><a href="eletro.php" class="active"><i class="fas fa-plug"></i> Eletrodomésticos</a></li>
-                    <li><a href="#"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+                    <li><a href="relatorios.php"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
                 </ul>
             </nav>
             <div class="logout"><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Sair</a></div>
         </aside>
 
         <main class="main-content">
-            <header><h1>Gerenciar Eletrodomésticos</h1></header>
+            <header><h1>Gerenciar Eletrodomésticos</h1>
+                <div class="user-info">
+                    <span><?php echo htmlspecialchars($nome_usuario_logado); ?></span>
+                    <img src="img/perfil.png" alt="Avatar">
+                </div>
+            </header>
 
             <?php if (isset($_GET['sucesso_edicao'])): ?>
                 <div class="card" style="background-color: #d4edda; color: #155724; padding: 15px; margin-bottom: 20px;">

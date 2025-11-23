@@ -8,6 +8,9 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
     exit();
 }
 
+// Pega o nome da sessão (se foi definido no cadastro) ou usa um padrão
+$nome_usuario_logado = $_SESSION['nome_usuario'] ?? 'Usuário Demo';
+
 $idClienteLogado = $_SESSION['id_cliente'];
 $categoriasDoCliente = [];
 $erro_banco = null;
@@ -62,8 +65,8 @@ try {
             <header>
                 <h1>Gerenciar Categorias</h1>
                 <div class="user-info">
-                    <span><?php echo htmlspecialchars($_SESSION['nome_usuario'] ?? ''); ?></span>
-                    <img src="img/antero.jpg" alt="Avatar"> 
+                    <span><?php echo htmlspecialchars($nome_usuario_logado); ?></span>
+                    <img src="img/perfil.png" alt="Avatar">
                 </div>
             </header>
 

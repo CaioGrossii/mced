@@ -17,7 +17,7 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
 define('CUSTO_POR_KWH', 0.60); // Ex: R$ 0,60 por kWh
 
 // Pega o nome da sessão (se foi definido no cadastro) ou usa um padrão
-$nome_usuario_logado = $_SESSION['nome_usuario'] ?? 'Usuário Demo'; //
+$nome_usuario_logado = $_SESSION['nome_usuario'] ?? 'Usuário Demo';
 
 // Pega as datas do filtro (ou usa padrão) apenas para exibição
 $data_inicio = $_GET['data_inicio'] ?? date('Y-m-d', strtotime('-30 days'));
@@ -93,7 +93,8 @@ $erro_db = null;
                 <h1>Relatórios de Consumo</h1>
                 <div class="user-info">
                     <span><?php echo htmlspecialchars($nome_usuario_logado); ?></span>
-                    <img src="img/antero.jpg" alt="Avatar"> </div>
+                    <img src="img/perfil.png" alt="Avatar">
+                </div>
             </header>
 
             <section class="filters-bar">
@@ -146,7 +147,7 @@ $erro_db = null;
                                 <th>Data</th>
                                 <th>Eletrodoméstico</th>
                                 <th>Cômodo</th>
-                                <th>Duração (HH:MM:SS)</th>
+                                <th>Tempo Utilizado</th>
                                 <th>Consumo (kWh)</th>
                             </tr>
                         </thead>

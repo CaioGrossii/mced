@@ -8,6 +8,9 @@ if (!isset($_SESSION['usuario_logado']) || !isset($_SESSION['id_cliente'])) {
     exit();
 }
 
+// Pega o nome da sessão (se foi definido no cadastro) ou usa um padrão
+$nome_usuario_logado = $_SESSION['nome_usuario'] ?? 'Usuário Demo';
+
 // Inicializa variáveis para evitar erros.
 $imoveis_disponiveis = []; // Para o formulário de cadastro
 $comodos_agrupados = [];   // Para a listagem
@@ -85,7 +88,12 @@ try {
         </aside>
 
         <main class="main-content">
-            <header><h1>Gerenciar Cômodos</h1></header>
+            <header><h1>Gerenciar Cômodos</h1>
+                <div class="user-info">
+                    <span><?php echo htmlspecialchars($nome_usuario_logado); ?></span>
+                    <img src="img/perfil.png" alt="Avatar">
+                </div>
+            </header>
 
             <?php if (isset($_GET['sucesso_edicao'])): ?>
                 <div class="card" style="background-color: #d4edda; color: #155724; padding: 15px; margin-bottom: 20px; text-align:left;">

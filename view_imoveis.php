@@ -6,6 +6,9 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true 
     exit();
 }
 
+// Pega o nome da sessão (se foi definido no cadastro) ou usa um padrão
+$nome_usuario_logado = $_SESSION['nome_usuario'] ?? 'Usuário Demo';
+
 $imoveis = [];
 $erro_banco = null;
 $feedback_sucesso = null;
@@ -75,10 +78,14 @@ try {
         <main class="main-content">
             <header>
                 <h1>Meus Imóveis Cadastrados</h1>
-                <a href="imoveis.php" class="btn-header">
-                    <i class="fas fa-plus"></i>
-                    Novo Imóvel
-                </a>
+                    <a href="imoveis.php" class="btn-header">
+                        <i class="fas fa-plus"></i>
+                        Novo Imóvel
+                    </a>
+                <div class="user-info">
+                    <span><?php echo htmlspecialchars($nome_usuario_logado); ?></span>
+                    <img src="img/perfil.png" alt="Avatar">
+                </div>
             </header>
             
             <?php if ($feedback_sucesso): ?>

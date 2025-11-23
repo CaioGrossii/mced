@@ -1,16 +1,15 @@
 <?php
-// 1. Inicia a sessão para poder acessar as variáveis de sessão.
+// 1. Inicia a sessão.
 session_start();
 
-// 2. O GUARDIÃO: Verifica se o usuário está realmente logado.
-// Se a variável de sessão 'usuario_logado' não existir ou não for true,
-// redireciona o usuário para a página de login e encerra o script.
-if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true) {
-    header("Location: login.php"); // Leva para a página de login
-    exit(); // Garante que o restante do código não seja executado
-}
+// Configura o timezone (Brasil/São Paulo)
+date_default_timezone_set('America/Sao_Paulo');
 
-// 3. Se o script chegou até aqui, o usuário está logado e pode ver a página.
+// 2. O GUARDIÃO: Verifica login.
+if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true) {
+    header("Location: login.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -42,25 +41,36 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
         <main class="main-content">
             <header>
                 <h1>Bem-vindo, <?php echo htmlspecialchars($_SESSION['nome_usuario']); ?></h1>
-                <div class="user-info">
-                    <a href="perfil.php" title="Editar Perfil">
-                        <img src="img/antonello 2.png" alt="Avatar">
-                    </a>
+                
+                <div class="header-right">
+                    <div class="date-display">
+                        <?php echo date('d/m/Y'); ?>
+                        <span><?php echo date('H:i'); ?></span>
+                    </div>
+
+                    <div class="user-info">
+                        <a href="perfil.php" title="Editar Perfil">
+                            <img src="img/perfil.png" alt="Avatar">
+                        </a>
+                    </div>
                 </div>
             </header>
 
-            <section class="cards">
-                <div class="card">
+            <section class="cardsdash">
+                <div class="cardash">
                     <h3>Consumo Total</h3>
                     <p>250 kWh</p>
+                    <small>Até o momento</small>
                 </div>
-                <div class="card">
-                    <h3>Custo Estimado - Mês</h3>
+                <div class="cardash">
+                    <h3>Previsão de Conta</h3>
                     <p>R$ 150,00</p>
+                    <small>Estimativa Mês</small>
                 </div>
-                <div class="card">
+                <div class="cardash">
                     <h3>Eletrodomésticos</h3>
                     <p>12 ativos</p>
+                    <small>Em uso</small>
                 </div>
             </section>
             

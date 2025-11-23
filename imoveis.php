@@ -39,7 +39,7 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
                 <h1>Novo Imóvel</h1>
                 <div class="user-info">
                     <span><?php echo htmlspecialchars($_SESSION['nome_usuario'] ?? 'Usuário'); ?></span>
-                    <img src="img/antonello 2.png" alt="Avatar">
+                    <img src="img/perfil.png" alt="Avatar">
                 </div>
             </header>
 

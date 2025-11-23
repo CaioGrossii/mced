@@ -1,0 +1,77 @@
+/* --- Início: Estilos do Dashboard (Header e Cards) --- */
+
+/* Ajuste do Header para alinhar Data e Avatar */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Espaçamento entre a data e a info do usuário */
+}
+
+/* Estilo da Data e Hora */
+.date-display {
+    text-align: right;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color, #00f2ff);
+    line-height: 1.2;
+}
+
+.date-display span {
+    display: block;
+    font-size: 0.8rem;
+    opacity: 0.8;
+    font-weight: 400;
+}
+
+/* --- Estilos para Cards Quadrados --- */
+.cardsdash{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+    gap: 20px;
+    margin-bottom: 20px;
+    height: 200px;
+}
+
+.cardash {
+    /* Proporção 1:1 para formar um quadrado perfeito */
+    aspect-ratio: 1 / 1;
+    
+    /* Centralização total do conteúdo */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+    padding: 20px;
+    border-radius: 12px; /* Arredondamento padrão */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Sombra suave */
+    height: 200px;
+}
+
+.cardash h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.cardash p {
+    font-size: 1.8rem; /* Número em destaque */
+    font-weight: bold;
+    margin: 0;
+    color: #00f2ff;
+}
+
+.cardash small {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8rem;
+    color: white;
+}

@@ -264,3 +264,12 @@ table tr:hover td {
     transform: translateY(-2px);
     box-shadow: 0 0 15px rgba(0, 123, 255, 0.4);
 }
+
+.btn-header {
+    border-radius: 10px;
+    background-color: rgba(0, 123, 255, 0.4);
+    height: 25px;
+    width: 125px;
+    text-align: center;
+    font-size: 15px;
+}
