@@ -10,6 +10,39 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
     header("Location: login.php");
     exit();
 }
+
+// 3. CONEXÃO E BUSCA DE DADOS PARA A DASHBOARD
+$total_eletros = 0; // Valor padrão caso dê erro
+
+try {
+    // Credenciais do banco (padronizadas do projeto)
+    $servidor = "localhost";
+    $usuario_db = "root";
+    $senha_db = "p1Mc3d25*";
+    $banco = "mced";
+    
+    $conexao = new PDO("mysql:host=$servidor;dbname=$banco;charset=utf8", $usuario_db, $senha_db);
+    $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Consulta para contar eletrodomésticos DO USUÁRIO LOGADO
+    // Fazemos JOIN com comodos e imoveis para garantir que o item pertence a este cliente
+    $sql_contagem = "SELECT COUNT(*) 
+                     FROM eletrodomesticos e
+                     JOIN comodos c ON e.id_comodo = c.id_comodo
+                     JOIN imoveis i ON c.id_imovel = i.id_imovel
+                     WHERE i.id_cliente = :id_cliente";
+                     
+    $stmt = $conexao->prepare($sql_contagem);
+    $stmt->bindParam(':id_cliente', $_SESSION['id_cliente']);
+    $stmt->execute();
+    
+    // Pega o número resultante
+    $total_eletros = $stmt->fetchColumn();
+
+} catch (PDOException $e) {
+    // Em produção, grave em log. Aqui, apenas mantemos o zero para não quebrar o layout.
+    error_log("Erro ao contar eletrodomésticos na dash: " . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -24,8 +57,8 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
             </div>
             <nav>
                 <ul>
-                    <li><a href="dash.php"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                    <li><a href="#"><i class="fa-solid fa-bolt-lightning"></i> Consumo</a></li>
+                    <li><a href="dash.php" class="active"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                    <li><a href="consumo.php"><i class="fa-solid fa-bolt-lightning"></i> Consumo</a></li>
                     <li><a href="view_imoveis.php"><i class="fas fa-building"></i> Imóveis</a></li>
                     <li><a href="comodos.php"><i class="fas fa-door-open"></i> Cômodos</a></li>
                     <li><a href="categorias.php"><i class="fas fa-tags"></i> Categorias</a></li>
@@ -59,8 +92,7 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
             <section class="cardsdash">
                 <div class="cardash">
                     <h3>Consumo Total</h3>
-                    <p>250 kWh</p>
-                    <small>Até o momento</small>
+                    <p>250 kWh</p> <small>Até o momento</small>
                 </div>
                 <div class="cardash">
                     <h3>Previsão de Conta</h3>
@@ -69,8 +101,8 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
                 </div>
                 <div class="cardash">
                     <h3>Eletrodomésticos</h3>
-                    <p>12 ativos</p>
-                    <small>Em uso</small>
+                    <p><?php echo $total_eletros; ?></p>
+                    <small>Cadastrado</small>
                 </div>
             </section>
             

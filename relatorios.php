@@ -8,11 +8,6 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
     exit();
 }
 
-// ------------------------------------------------------------------
-// --- LÓGICA DE BANCO DE DADOS REMOVIDA PARA DEMONSTRAÇÃO ---
-// --- INÍCIO DOS DADOS FAKES (MOCKUP) ---
-// ------------------------------------------------------------------
-
 // Define uma tarifa fake para os cálculos
 define('CUSTO_POR_KWH', 0.60); // Ex: R$ 0,60 por kWh
 
@@ -76,7 +71,7 @@ $erro_db = null;
             <nav>
                 <ul>
                     <li><a href="dash.php"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                    <li><a href="#"><i class="fa-solid fa-bolt-lightning"></i> Consumo</a></li>
+                    <li><a href="consumo.php"><i class="fa-solid fa-bolt-lightning"></i> Consumo</a></li>
                     <li><a href="view_imoveis.php"><i class="fas fa-building"></i> Imóveis</a></li>
                     <li><a href="comodos.php"><i class="fas fa-door-open"></i> Cômodos</a></li>
                     <li><a href="categorias.php"><i class="fas fa-tags"></i> Categorias</a></li>
