@@ -1,0 +1,266 @@
+/* --- Cards (Glassmorphism) --- */
+/* --- Cards (Ajuste de Tamanho e Hierarquia) --- */
+.card {
+    background: var(--color-bg-surface);
+    border: var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    padding: 20px; /* Padding menor */
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--transition-speed);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px; /* Linha mais fina */
+    background: linear-gradient(90deg, var(--color-primary), var(--color-primary-glow));
+}
+
+.card h3 {
+    color: var(--color-text-muted);
+    font-size: 0.75rem; /* Título menor e discreto */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+/* Valor Principal (ex: 258,40 kWh) */
+.card p {
+    font-size: 1.5rem; /* Reduzido de 2rem para 1.5rem */
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+/* Detalhes Secundários (ex: Período...) */
+.card p.details, 
+.card .details {
+    font-size: 0.8rem; /* Bem menor para hierarquia */
+    color: var(--color-text-muted);
+    font-weight: 400;
+    margin-top: auto; /* Empurra para baixo se sobrar espaço */
+}
+
+/* --- Barra de Filtros (Ajuste do Botão) --- */
+.filters-bar {
+    background: var(--color-bg-surface);
+    border: var(--glass-border);
+    padding: 15px 20px;
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 30px;
+    
+    display: flex;
+    align-items: flex-end; /* Alinha o botão com a base dos inputs */
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* --- Inputs e Forms --- */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--color-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Estilização Geral de Inputs */
+input, select, textarea {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #333;
+    border-radius: var(--border-radius-sm);
+    color: #fff;
+    font-size: 1rem;
+    transition: all var(--transition-speed);
+    
+    /* Garante que o ícone padrão do select não quebre o layout */
+    appearance: none; 
+    -webkit-appearance: none; 
+    -moz-appearance: none;
+}
+
+/* Adiciona uma seta customizada para o select (opcional, mas recomendado) */
+select {
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px top 50%;
+    background-size: 12px auto;
+    padding-right: 30px; /* Espaço para a seta */
+}
+
+/* CORREÇÃO CRÍTICA: Fundo das opções do Select */
+select option {
+    background-color: #121212; /* Cor sólida escura (mesma do bg-surface) */
+    color: #fff;
+    padding: 10px;
+}
+
+/* Estilos para Optgroup (Agrupamento de cômodos) */
+select optgroup {
+    background-color: #1a1a1a;
+    color: var(--color-primary);
+    font-style: normal;
+    font-weight: bold;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: rgba(0, 123, 255, 0.05);
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
+}
+
+/* Placeholder styling */
+::placeholder { color: rgba(255,255,255,0.3); }
+
+/* --- Botões --- */
+.btn, .btn-submit {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    display: inline-block;
+    text-align: center;
+}
+
+.btn:hover, .btn-submit:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.6);
+}
+
+.btn-delete {
+    background: transparent;
+    border: 1px solid var(--color-danger);
+    color: var(--color-danger);
+    padding: 8px 12px; /* Ajuste para ícones */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.btn-delete:hover {
+    background: var(--color-danger);
+    color: #fff;
+    box-shadow: 0 0 15px var(--color-danger);
+}
+
+/* --- Tabelas --- */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px; /* Espaçamento entre linhas */
+}
+
+table th {
+    text-align: left;
+    padding: 15px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+table td {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px;
+    color: #fff;
+    vertical-align: middle;
+}
+
+table tr td:first-child { border-radius: 8px 0 0 8px; }
+table tr td:last-child { border-radius: 0 8px 8px 0; }
+
+table tr:hover td {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* --- Feedbacks --- */
+.feedback {
+    padding: 15px;
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 20px;
+    font-weight: 600;
+    text-align: center;
+}
+.feedback.sucesso {
+    background: rgba(5, 242, 155, 0.1);
+    color: var(--color-success);
+    border: 1px solid var(--color-success);
+}
+.feedback.erro {
+    background: rgba(255, 42, 109, 0.1);
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger);
+}
+
+.filters-bar .form-group {
+    margin-bottom: 0; /* Remove margem extra dentro da barra */
+    display: flex;
+    flex-direction: column;
+}
+
+.filters-bar label {
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+    color: var(--color-text-muted);
+}
+
+.filters-bar input[type="date"] {
+    padding: 8px 12px; /* Inputs mais compactos */
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #333;
+    color: #fff;
+    border-radius: 4px;
+    min-width: 150px;
+}
+
+/* Estilização Específica do Botão Filtrar */
+.filters-bar button {
+    padding: 9px 25px; /* Altura para alinhar com o input date */
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 38px; /* Altura forçada para igualar ao input */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.filters-bar button:hover {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-glow));
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.4);
+}

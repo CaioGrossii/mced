@@ -60,85 +60,12 @@ $registros_consumo = [
 // Nenhuma variável de erro é definida
 $erro_db = null; 
 
-// ------------------------------------------------------------------
-// --- FIM DOS DADOS FAKES (MOCKUP) ---
-// ------------------------------------------------------------------
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>MCED - Relatórios</title>
-    <link rel="stylesheet" href="dash.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> <style>
-        .filters-bar {
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap; /* Permite quebrar linha em telas menores */
-            gap: 20px;
-            align-items: center;
-        }
-        .filters-bar .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-        .filters-bar label {
-            font-size: 12px;
-            color: #6b7280;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-        .filters-bar input[type="date"] {
-            padding: 8px 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-            transition: 0.3s;
-        }
-        .filters-bar input[type="date"]:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 6px rgba(37,99,235,0.3);
-        }
-        .filters-bar button {
-            padding: 10px 15px;
-            background: #2563eb;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 600;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-            align-self: flex-end; /* Alinha o botão com a base dos inputs */
-        }
-        .filters-bar button:hover {
-            background: #1e40af;
-        }
-
-        /* Ajustes nos cards (usando a classe .card de dash.css) */
-        .card p.details {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 5px;
-            font-weight: normal;
-        }
-
-        /* *** NOVO: Estilo para a imagem do gráfico *** */
-        .chart-card {
-            margin-bottom: 20px;
-        }
-        .chart-card img {
-            width: 100%; /* Faz a imagem ocupar 100% do card */
-            height: auto; /* Mantém a proporção */
-            border-radius: 8px; /* Opcional: arredonda as bordas */
-            border: 1px solid #e5e7eb; /* Opcional: borda suave */
-        }
-    </style>
+    <?php include 'includes/head.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
@@ -201,11 +128,11 @@ $erro_db = null;
                 </div>
             </section>
             
-            <div class="chart-card"> <h3>Consumo por Eletrodoméstico (kWh)</h3>
-                
-                <a href="img/meu_grafico_fake.png" target="_blank">
-                    <img src="https://via.placeholder.com/800x300.png?text=Placeholder+para+Gráfico+de+Barras" alt="Gráfico de Consumo por Eletrodoméstico">
-                </a>
+                <div class="card chart-card">
+                    <h3>Consumo por Eletrodoméstico (kWh)</h3>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="consumoChart"></canvas>
+                    </div>
                 </div>
 
             <div class="table-card"> <h3>Detalhamento de Consumo</h3>
@@ -239,6 +166,75 @@ $erro_db = null;
             </div>
         </main>
     </div>
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const ctx = document.getElementById('consumoChart').getContext('2d');
+
+    // Criando um degradê futurista para as barras
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(0, 242, 255, 0.8)'); // Ciano Neon (Topo)
+    gradient.addColorStop(1, 'rgba(0, 123, 255, 0.1)'); // Azul Transparente (Base)
+
+    new Chart(ctx, {
+        type: 'bar', // Gráfico de Barras
+        data: {
+            // Rótulos dos Eletrodomésticos (Dados Fakes)
+            labels: ['Ar Condicionado', 'Chuveiro', 'Geladeira', 'Computador', 'Lavadora', 'Microondas'],
+            datasets: [{
+                label: 'Consumo (kWh)',
+                data: [112.5, 85.2, 60.4, 45.0, 32.1, 15.5], // Valores Fakes
+                backgroundColor: gradient,
+                borderColor: '#00f2ff', // Borda Neon
+                borderWidth: 1,
+                borderRadius: 5, // Barras arredondadas
+                barPercentage: 0.6, // Largura da barra
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false // Esconde a legenda para ficar mais limpo
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(20, 20, 30, 0.9)',
+                    titleColor: '#fff',
+                    bodyColor: '#00f2ff',
+                    borderColor: 'rgba(255,255,255,0.1)',
+                    borderWidth: 1,
+                    padding: 10
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)' // Linhas de grade sutis
+                    },
+                    ticks: {
+                        color: '#a0a0a0', // Cor do texto do eixo Y
+                        font: { family: "'Poppins', sans-serif" }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false // Remove grade vertical
+                    },
+                    ticks: {
+                        color: '#e0e0e0', // Cor do texto do eixo X
+                        font: { family: "'Poppins', sans-serif" }
+                    }
+                }
+            },
+            animation: {
+                duration: 2000, // Animação suave de 2 segundos
+                easing: 'easeOutQuart'
+            }
+        }
+    });
+});
+</script>
 
     </body>
 </html>

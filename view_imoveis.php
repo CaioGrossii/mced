@@ -52,42 +52,7 @@ try {
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>MCED - Meus Imóveis</title>
-    <link rel="stylesheet" href="dash.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
-    <style>
-        .btn-header {
-            background-color: #2563eb; color: #fff; padding: 10px 15px;
-            border-radius: 8px; text-decoration: none; font-size: 14px;
-            font-weight: 600; display: inline-flex; align-items: center;
-            gap: 8px; transition: background-color 0.3s;
-        }
-        .btn-header:hover { background-color: #1e40af; }
-        
-        /* Estilos para botões de ação na tabela */
-        .action-link {
-            text-decoration: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-right: 5px;
-        }
-        .btn-edit {
-            background-color: #f0f0f0; color: #333;
-        }
-        .btn-delete {
-            background-color: #fee2e2; color: #991b1b;
-        }
-        .feedback-sucesso {
-            background-color: #d4edda; color: #155724; padding: 15px; margin-bottom: 20px; border-radius: 8px;
-        }
-        .feedback-erro {
-            background-color: #f8d7da; color: #721c24; padding: 15px; margin-bottom: 20px; border-radius: 8px;
-        }
-    </style>
+    <?php include 'includes/head.php'; ?>
 </head>
 <body>
     <div class="container">

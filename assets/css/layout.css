@@ -1,0 +1,138 @@
+.container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    background: radial-gradient(circle at top right, #1a1a2e 0%, var(--color-bg-deep) 60%);
+}
+
+/* --- Sidebar Futurista --- */
+.sidebar {
+    width: 260px;
+    background: var(--color-bg-glass);
+    backdrop-filter: var(--backdrop-blur);
+    -webkit-backdrop-filter: var(--backdrop-blur);
+    border-right: var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 30px 20px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    z-index: 100;
+    transition: width var(--transition-speed);
+}
+
+.logo h2 {
+    text-align: center;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+    margin-bottom: 40px;
+}
+
+.sidebar nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.sidebar nav ul li a, 
+.logout a {
+    color: var(--color-text-muted);
+    padding: 12px 15px;
+    border-radius: var(--border-radius-sm);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+}
+
+.sidebar nav ul li a:hover,
+.sidebar nav ul li a.active {
+    background: rgba(0, 123, 255, 0.1);
+    color: #fff;
+    border-left: 3px solid var(--color-primary-glow);
+    box-shadow: var(--shadow-neon);
+}
+
+.logout a {
+    margin-top: auto;
+    color: var(--color-danger);
+}
+.logout a:hover {
+    background: rgba(255, 42, 109, 0.1);
+    box-shadow: 0 0 10px rgba(255, 42, 109, 0.2);
+    border-left: 3px solid var(--color-danger);
+}
+
+/* --- Conteúdo Principal --- */
+.main-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    max-width: 1600px; /* Expansivo mas contido em telas ultra-wide */
+    margin: 0 auto;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px; /* Reduzi um pouco para compactar */
+    padding-bottom: 20px;
+    border-bottom: var(--glass-border);
+}
+
+header h1 {
+    font-size: 1.8rem; /* Tamanho mais equilibrado */
+    font-weight: 600;
+    color: #fff;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espaço entre nome e foto */
+    justify-content: flex-end;
+}
+
+.user-info span {
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--color-text-main);
+    text-align: right;
+}
+
+.user-info img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+    object-fit: cover;
+    transition: transform 0.2s;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 80px;
+        padding: 20px 10px;
+    }
+    .logo h2, .sidebar nav ul li a span, .logout a span {
+        display: none; /* Esconde texto no mobile */
+    }
+    .sidebar nav ul li a {
+        justify-content: center;
+    }
+    .container {
+        flex-direction: row; 
+    }
+    .main-content {
+        padding: 20px;
+    }
+}

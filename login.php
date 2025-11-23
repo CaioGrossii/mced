@@ -11,29 +11,9 @@ if (isset($_SESSION['usuario_logado']) && $_SESSION['usuario_logado'] === true) 
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - MCED</title>
-    
-    <link rel="stylesheet" href="login.css">
+    <?php include 'includes/head.php'; ?>
+    <link rel="stylesheet" href="assets/css/auth.css">
 </head>
-<body>
-    <div class="login-container">
-        <h2>Login</h2>
-        
-        <?php
-        // Verifica se existe um parâmetro 'erro' na URL e exibe a mensagem de forma segura
-        if (isset($_GET['erro'])) {
-            $mensagemErro = htmlspecialchars("E-mail ou senha inválidos. Tente novamente.", ENT_QUOTES, 'UTF-8');
-            echo '<p class="error">' . $mensagemErro . '</p>';
-        }
-        ?>
-
-        <form action="processa_login.php" method="POST">
-            <input type="email" name="email" placeholder="Seu e-mail" required>
-            <input type="password" name="senha" placeholder="Sua senha" required>
-            <button type="submit">Entrar</button>
-        </form>
-    </div>
+<body class="auth-body">
 </body>
 </html>

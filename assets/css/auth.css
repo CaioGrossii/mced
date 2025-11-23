@@ -1,0 +1,43 @@
+/* Centraliza na tela */
+body.auth-body {
+    background: radial-gradient(circle at center, #1a1a2e 0%, #000 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 450px;
+    padding: 50px;
+    background: rgba(20, 20, 20, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+.login-container h1, .login-container h2 {
+    color: #fff;
+    margin-bottom: 30px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.login-container h1 span {
+    color: var(--color-primary);
+}
+
+.extra-links {
+    margin-top: 20px;
+}
+.extra-links a {
+    color: var(--color-primary);
+    font-size: 0.9rem;
+}
+.extra-links a:hover {
+    color: var(--color-primary-glow);
+    text-shadow: 0 0 8px var(--color-primary-glow);
+}
