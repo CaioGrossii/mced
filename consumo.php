@@ -86,13 +86,21 @@ try {
         </aside>
 
         <main class="main-content">
-            <header>
-                <h1>Registro de Consumo</h1>
-                <div class="user-info">
-                    <span><?php echo htmlspecialchars($nome_usuario_logado); ?></span>
-                    <img src="img/perfil.png" alt="Avatar">
-                </div>
-            </header>
+            <form action="processa_tarifa.php" method="POST">
+        <header>
+        <h1>Registro de Consumo</h1>      
+            <div style="background-color: #111; border: 1px solid #333; padding: 5px 15px; border-radius: 5px; display: flex; align-items: center; gap: 10px;">   
+            <input type="number" step="0.0001" name="tarifa" value="0.8500" required 
+                   style="background: transparent; border: none; color: #fff; width: 80px; text-align: right; outline: none; font-weight: bold; padding: 0px;">
+            <button type="submit" style="background: transparent; border: none; color: #3b82f6; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 0;">
+                <i class="fas fa-plus"></i> Gravar Tarifa
+            </button>
+        </div>
+        <div class="user-info">
+            <span><?php echo htmlspecialchars($nome_usuario_logado); ?></span>
+            <img src="img/perfil.png" alt="Avatar">
+        </div>
+    </header>
 
             <?php if (isset($_GET['sucesso'])): ?>
                 <div class="card" style="background: #d1fae5; color: #065f46; padding: 15px; margin-bottom: 20px;">
@@ -184,7 +192,7 @@ try {
                                 </td>
                                 <td><?php echo substr($registro['duracao'], 0, 5); ?> h</td>
                                 <td style="color: var(--color-primary); font-weight:bold;">
-                                    <?php echo number_format($kwh, 3, ',', '.'); ?>
+                                    <?php echo number_format($kwh, 2, ',', '.'); ?>
                                 </td>
                                 <td>
                                     <a href="consumo_editar.php?id=<?php echo $registro['id_consumo']; ?>" title="Editar"><i class="fas fa-edit"></i></a>

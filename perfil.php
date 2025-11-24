@@ -78,7 +78,7 @@ if (isset($_SESSION['feedback'])) {
                 <h1>Meu Perfil</h1>
                 <div class="user-info">
                     <a href="perfil.php" title="Editar Perfil">
-                        <img src="img/antonello 2.png" alt="Avatar">
+                        <img src="img/perfil.png" alt="Avatar">
                     </a>
                 </div>
             </header>

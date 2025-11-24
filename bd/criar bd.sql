@@ -8,6 +8,7 @@ CREATE TABLE clientes (
     nm_cliente VARCHAR(100) NOT NULL,
     tel_cliente VARCHAR(20),
     email_cliente VARCHAR(100) NOT NULL UNIQUE,
+    tarifa DECIMAL(10, 4) NOT NULL DEFAULT 0.00,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     senha VARCHAR(255) NOT NULL
 );
@@ -60,5 +61,7 @@ CREATE TABLE consumo (
     hora_inicio TIME NOT NULL,
     hora_fim TIME NOT NULL, 
     id_eletro INT NOT NULL,
+    tarifa DECIMAL(10, 4) NOT NULL DEFAULT 0.00,
+    FOREIGN KEY (tarifa) REFERENCES clientes(tarifa),
     FOREIGN KEY (id_eletro) REFERENCES eletrodomesticos(id_eletro)
 );
