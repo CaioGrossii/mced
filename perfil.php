@@ -60,12 +60,12 @@ if (isset($_SESSION['feedback'])) {
             <nav>
                 <ul>
                     <li><a href="dash.php"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-                    <li><a href="#"><i class="fa-solid fa-bolt-lightning"></i> Consumo</a></li>
+                    <li><a href="consumo.php"><i class="fa-solid fa-bolt-lightning"></i> Consumo</a></li>
                     <li><a href="view_imoveis.php"><i class="fas fa-building"></i> Imóveis</a></li>
                     <li><a href="comodos.php"><i class="fas fa-door-open"></i> Cômodos</a></li>
                     <li><a href="categorias.php"><i class="fas fa-tags"></i> Categorias</a></li>
                     <li><a href="eletro.php"><i class="fas fa-plug"></i> Eletrodomésticos</a></li>
-                    <li><a href="#"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+                    <!-- <li><a href="relatorios.php"><i class="fas fa-chart-bar"></i> Relatórios</a></li> -->
                 </ul>
             </nav>
             <div class="logout">

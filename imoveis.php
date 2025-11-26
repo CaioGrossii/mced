@@ -26,7 +26,7 @@ if (!isset($_SESSION['usuario_logado']) || $_SESSION['usuario_logado'] !== true)
                     <li><a href="comodos.php"><i class="fas fa-door-open"></i> Cômodos</a></li>
                     <li><a href="categorias.php"><i class="fas fa-tags"></i> Categorias</a></li>
                     <li><a href="eletro.php"><i class="fas fa-plug"></i> Eletrodomésticos</a></li>
-                    <li><a href="relatorios.php"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+                    <!-- <li><a href="relatorios.php"><i class="fas fa-chart-bar"></i> Relatórios</a></li> -->
                 </ul>
             </nav>
             <div class="logout">

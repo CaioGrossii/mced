@@ -61,7 +61,6 @@ CREATE TABLE consumo (
     hora_inicio TIME NOT NULL,
     hora_fim TIME NOT NULL, 
     id_eletro INT NOT NULL,
-    tarifa DECIMAL(10, 4) NOT NULL DEFAULT 0.00,
-    FOREIGN KEY (tarifa) REFERENCES clientes(tarifa),
+    consumokwh VARCHAR(5) NOT NULL,
     FOREIGN KEY (id_eletro) REFERENCES eletrodomesticos(id_eletro)
 );
