@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+// Configuração para mostrar erros do PHP na tela (REMOVER EM PRODUÇÃO)
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $nome = trim(htmlspecialchars($_POST['nome']));
@@ -10,27 +15,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $telefone = trim(htmlspecialchars($_POST['telefone']));
     $erros = [];
 
-    // (Aqui entram as suas validações de nome, email, senha, etc...)
     if (empty($nome)) $erros[] = "Nome é obrigatório.";
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $erros[] = "Email inválido.";
     if (strlen($senha) < 8) $erros[] = "Senha deve ter no mínimo 8 caracteres.";
 
     if (empty($erros)) {
         $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
+        
+        // Credenciais do Banco
         $servidor = "localhost";
         $usuario_db = "root";
         $senha_db = "p1Mc3d25*";
         $banco = "mced";
+        
         $conexao = null;
 
         try {
             $conexao = new PDO("mysql:host=$servidor;dbname=$banco;charset=utf8", $usuario_db, $senha_db);
             $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $sql = "INSERT INTO clientes (nm_cliente, email_cliente, senha, cpf_cliente, tel_cliente) VALUES (:nome_cliente, :email_cliente, :senha, :cpf_cliente, :tel_cliente)";
+            // Limpa o CPF para salvar apenas números
+            $cpf_limpo = preg_replace('/[^0-9]/', '', $cpf);
+
+            // Query de Inserção
+            $sql = "INSERT INTO clientes (nm_cliente, email_cliente, senha, cpf_cliente, tel_cliente) 
+                    VALUES (:nome_cliente, :email_cliente, :senha, :cpf_cliente, :tel_cliente)";
+            
             $stmt = $conexao->prepare($sql);
 
-            $cpf_limpo = preg_replace('/[^0-9]/', '', $cpf);
             $stmt->bindParam(':nome_cliente', $nome);
             $stmt->bindParam(':email_cliente', $email);
             $stmt->bindParam(':senha', $senha_hash); 
@@ -39,29 +51,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $stmt->execute();
             
-            // --- MUDANÇA: Obter o ID do usuário que acabamos de criar ---
+            // Sucesso: Pegar ID e criar Sessão
             $id_novo_cliente = $conexao->lastInsertId();
 
             $_SESSION['usuario_logado'] = true;
             $_SESSION['email_usuario'] = $email;
             $_SESSION['nome_usuario'] = $nome;
-            
-            // --- MUDANÇA: Salvar o novo ID na sessão ---
             $_SESSION['id_cliente'] = $id_novo_cliente;
 
-            header("Location: /mced/dash.php");
+            // Redireciona para a Dashboard
+            header("Location: dash.php"); // Removi o /mced/ para evitar erro de caminho se a pasta mudar
             exit();
 
         } catch(PDOException $e) {
-            // (Seu tratamento de erro aqui)
-            error_log("Erro de banco de dados no cadastro: " . $e->getMessage());
-            die("Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.");
+            // --- TRATAMENTO DE ERROS ---
+            
+            // Código 23000 geralmente indica duplicidade (Unique Constraint)
+            if ($e->getCode() == '23000') {
+                echo "<div style='color: white; background: #dc3545; padding: 20px; text-align: center; font-family: Arial;'>";
+                echo "<h2>Erro: Cadastro Duplicado</h2>";
+                echo "<p>O E-mail <strong>$email</strong> ou o CPF informado já estão cadastrados no sistema.</p>";
+                echo "<a href='cadastro.html' style='color: white; font-weight: bold;'>Voltar e tentar outro</a>";
+                echo "</div>";
+                exit();
+            } else {
+                // Outros erros (Ex: Senha do banco errada, nome da tabela errado)
+                echo "<div style='color: white; background: #ff9800; padding: 20px; text-align: center; font-family: Arial;'>";
+                echo "<h2>Erro Técnico (Debug)</h2>";
+                echo "<p>Ocorreu um erro no banco de dados:</p>";
+                echo "<pre>" . $e->getMessage() . "</pre>";
+                echo "<p>Verifique se o banco 'mced' existe e se a tabela 'clientes' tem as colunas corretas.</p>";
+                echo "</div>";
+                die();
+            }
         } finally {
             $conexao = null;
         }
         
     } else {
-        // (Sua exibição de erros de validação aqui)
+        // Exibir erros de validação do PHP
+        foreach ($erros as $erro) {
+            echo "<p>$erro</p>";
+        }
     }
 } else {
     header("Location: index.html");
