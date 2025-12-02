@@ -10,7 +10,8 @@ CREATE TABLE clientes (
     email_cliente VARCHAR(100) NOT NULL UNIQUE,
     tarifa DECIMAL(10, 4) NOT NULL DEFAULT 0.00,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    senha VARCHAR(255) NOT NULL
+    senha VARCHAR(255) NOT NULL,
+    tema VARCHAR(10) DEFAULT 'dark'
 );
 
 -- Tabela Imoveis (Depende de Clientes)
